@@ -1,12 +1,14 @@
 from flask import Flask, render_template
 app = Flask(__name__)
+app.static_url_path = '/static'
+app.static_folder = 'static'
 
 @app.route("/")
-@app.route("/home")
-def home():
-    return render_template('home.html', subtitle='Home Page', text='This is the home page')
+@app.route("/start")
+def start():
+    return render_template('start.html', subtitle='Starting Screen')
 @app.route("/login")
 def login():
-    return render_template('home.html', subtitle='Login', text='')
+    return render_template('login.html', subtitle='Login')
 if __name__ == '__main__':
-    app.run(debug=True, host="0.0.0.0")
+    app.run(debug=True, host="0.0.0.0", port = 5001)
