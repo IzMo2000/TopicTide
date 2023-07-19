@@ -6,10 +6,13 @@ app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
 
+app.static_url_path = '/static'
+app.static_folder = 'static'
+
 # define landing page
 @app.route("/")
-@app.route("/landing")
-def landing():
+@app.route("/start")
+def start():
     # if signup button is pressed
 
         # redirect to signup page
@@ -18,7 +21,7 @@ def landing():
 
         # redirect to login page
 
-    return "<p>Welcome to the landing page</p>" 
+    return render_template('start.html', subtitle='Starting Screen') 
 
 
 # define user login page
@@ -43,7 +46,7 @@ def login():
 
         return redirect(url_for('home')) 
 
-    return "<p>Welcome to the login page</p>"
+    return render_template('login.html', subtitle='Login')
 
 
 # define signup page
