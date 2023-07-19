@@ -77,10 +77,32 @@ def home():
     # grab form data for news search
     form = SearchForm()
 
+    # if track button is pressed
+
+        # search bar topic is not empty
+
+            # send tracking data to database
+
+        # search bar topic is empty
+
+            # indicate error
+    
+    # if tracked topic title is clicked
+
+        # redirect to tracking page
+    
+    # if specific tracked topic is clicked
+
+        # redirect to topic expansion
+
     # validate search form on submit
     if form.validate_on_submit():
 
         # make call to api to retrieve news stories based on form
+
+        # display stories onto page
+
+        # update recent searches section
 
     return "<p>Welcome to the home page</p>"
 
@@ -88,17 +110,56 @@ def home():
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
 def tracking():
+    # if specific tracked topic is clicked
+
+        # redirect to topic expansion
+    
+    # if Update is clicked
+
+        # immediately update news stories, display new results
+    
+    # if Update Settings is clicked
+
+        # revalidate entered settings
+
+            # add new settings to database
+    
+    # if Remove is clicked
+
+        # removes tracked topic from database
+
+    # if next/previous page is clicked
+
+        # goes to next/previous results
+    
+
+
     return "<p>Welcome to the tracking page</p>"
 
 
 # define topic expanding page
 @app.route("/topic_expand", methods=['GET', 'POST'])
 def topic_expand():
+    # has same Update/Update Settings/Remove options as tracking pagew
+    # going to need to write an external function for those, most likely
+
+    # if next/previous page is clicked
+
+        # goes to next/previous results
+
+
     return "<p>Welcome to the topic expansion page</p>"
 
 # define bookmarks page
 @app.route("/bookmarks", methods=['GET', 'POST'])
 def bookmarks():
+    # if remove is clicked
+
+        # removes article from bookmarks
+
+    # if next/previous page is clicked
+
+        # goes to next/previous results
     return "<p>Welcome to the bookmarks page</p>" 
 
 
