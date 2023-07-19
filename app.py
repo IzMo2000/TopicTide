@@ -20,11 +20,13 @@ def login():
 
     if form.validate_on_submit():
             
-            # Obtain username and password from form
-            
-            # Check that username exists unique, password matches
-            
-            # If invalid, redirect to login, link to sign up
+        # Obtain username and password from form
+        
+        # Check that username is exists, password matches
+        
+        # If invalid, redirect to login, link to sign up
+
+        return redirect(url_for('home')) 
 
     return "<p>Welcome to the login page</p>"
 
@@ -41,6 +43,8 @@ def signup():
         # Check that username and email are unique
         
         # If not unique, redirect to signup page
+
+        # add user data to database
 
         return redirect(url_for('home')) 
     return "<p>Welcome to the sign up page</p>"
@@ -68,9 +72,6 @@ def topic_expand():
 def bookmarks():
     return "<p>Welcome to the bookmarks page</p>" 
 
-if __name__ == '__main__':               
-    app.run(debug=True, host="0.0.0.0")
-
 
 # define route to update_server, connecting git repo to PythonAnywhere
 @app.route("/update_server", methods=['POST'])
@@ -82,3 +83,8 @@ def webhook():
         return 'Updated PythonAnywhere successfully', 200
     else:
         return 'Wrong event type', 400
+
+
+# define main to run app
+if __name__ == '__main__':               
+    app.run(debug=True, host="0.0.0.0")
