@@ -9,10 +9,12 @@
    <header>
     <a href="{{ url_for('start') }}">
     <img src="{{ url_for('static', filename='media/logo.png') }}" alt="Logo" class="logo">
-
     </a>
-      
+    <h1 class = "title">Topic Tide</h1>
+    
     </header>
+    <main>
     {% block content %}{% endblock %}
+</main>
 </body>
 </html>

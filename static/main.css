@@ -1,0 +1,20 @@
+.logo {
+    position: fixed;
+    top: 15px;
+    left: 20px;
+    width: 75px;
+    height: 75px;
+  }
+  
+  .title {
+    position: fixed;
+    top: 15px;
+    left: 95px;
+    display: inline-block;
+    margin-left: 15px;
+  }
+
+  main{
+  margin-top: 150px;
+  }
+
