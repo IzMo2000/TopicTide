@@ -52,6 +52,9 @@
 
   }
 
+  .container .centered-buttons button:hover {
+    background-color: hwb(201 44% 11%);
+  }
 
   h2{
     font-size: 60px;
