@@ -100,14 +100,14 @@ def home():
 
     # validate search form on submit
     if form.validate_on_submit():
-
+        
         # make call to api to retrieve news stories based on form
 
         # display stories onto page
 
         # update recent searches section
 
-    return "<p>Welcome to the home page</p>"
+        return "<p>Welcome to the home page</p>"
 
 
 # define tracking page

@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, SubmitField
 from wtforms import BooleanField, IntegerField
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
-from from datetime import date
+from datetime import date
 
 # list of valid countries to be searched from using search api
 # the two letter codes are needed to call the api
