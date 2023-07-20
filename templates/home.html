@@ -1,4 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Welcome!</h1>
+<h2 style= "font-size: 45px;">Welcome!</h2>
+<div class = "search-container">
+<button type = "button"> Settings </button>
+<form action="/search" method="get">
+    <input style = "width: 600px; height: 45px; margin-left: 40px; margin-right:15px;" type="text" name="q" placeholder="Search for news...">
+    <input style = "cursor: pointer;border-radius: 40px; font-size: 18px;" type="submit" value="Search">
+  </form>
+</div>
+
+<p style = "text-align: left;"> Recent Searches:</p>
+<div class = "card" style =  "margin: 0px 5px; width: 15%"> </div>
+<p style = "text-align: left;"> Tracked Topics: </p>
+<div class = "card" style =  "margin: 0px 5px; width: 15%"> </div>
+
 {% endblock %}
