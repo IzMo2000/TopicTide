@@ -1,13 +1,29 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 app.static_url_path = '/static'
 app.static_folder = 'static'
+
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
+
+with app.app_context():
+    db.create_all()
 
 # define landing page
 @app.route("/")
