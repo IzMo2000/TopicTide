@@ -32,7 +32,7 @@
 
   .card {
 
-    background: white;
+    background: rgb(200, 188, 188);
     border: 2px solid black;
     border-radius: 3px;
     margin: 50px auto;
