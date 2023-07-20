@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms import BooleanField, IntegerField, DateField, ValidationError
-from wtforms.validators import DataRequired, Length, Email, EqualTo
+from wtforms.validators import DataRequired, Length, Email
+from wtforms.validators import EqualTo, NumberRange
+from wtforms.fields import DateField
 from datetime import date
 
 # list of valid countries to be searched from using search api
@@ -106,7 +108,7 @@ class SearchForm(FlaskForm):
             raise ValidationError("Invalid country, or country is not supported")
     
     # checks if the inputed language is one of the supported languages
-    def validate_nation(form, field):
+    def validate_language(form, field):
         if field.data not in valid_languages:
             raise ValidationError("Invalid language, or language is not supported")
 
@@ -115,6 +117,6 @@ class SearchForm(FlaskForm):
     date = DateField('Starting From', format = '%Y-%m-%d', default = date.today())
     nation = StringField('Country', default = 'United States', validators=[validate_nation, Length(min=1, max=50)])
     language = StringField('Language', default = 'United States', validators=[validate_language, Length(min=1, max=50)])
-    update_interval = IntegerField('Update every __ day(s)', NumberRange(min=1, max=31))
+    update_interval = IntegerField('Update every __ day(s)', validators=[NumberRange(min=1, max=31)])
     source = StringField('News Source', validators=[Length(min=1, max=50)])
     submit = SubmitField('Search')

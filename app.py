@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
-# from forms import RegistrationForm, LoginForm, SearchForm
+from forms import RegistrationForm, LoginForm, SearchForm
 
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
@@ -46,7 +46,7 @@ def login():
 
         return redirect(url_for('home')) 
 
-    return render_template('login.html', subtitle='Login')
+    return render_template('login.html', subtitle='Login', form=form)
 
 
 # define signup page
@@ -71,7 +71,7 @@ def signup():
         # add user data to database
 
         return redirect(url_for('home')) 
-    return render_template('signup.html', subtitle='Sign Up')
+    return render_template('signup.html', subtitle='Sign Up', form=form)
 
 
 # define home page
@@ -106,8 +106,9 @@ def home():
         # display stories onto page
 
         # update recent searches section
+        pass    # temp stub
 
-        return "<p>Welcome to the home page</p>"
+    return "<p>Welcome to the home page</p>"
 
 
 # define tracking page
