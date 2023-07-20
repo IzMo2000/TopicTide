@@ -17,6 +17,8 @@
    margin-top: 20px;
     left: 95px;
     margin-left: 20px;
+    font-family: 'Noto Serif JP', serif;
+    font-weight: 600;
   }
 
   main{
@@ -32,8 +34,8 @@
 
   .card {
 
-    background: white;
-    border: 2px solid black;
+    background: rgb(231, 231, 231);
+
     border-radius: 3px;
     margin: 50px auto;
     width: 500px;
@@ -43,6 +45,9 @@
     padding-left:100px;
     padding-right: 100px;
     margin-bottom: 75px;
+    border: 1.5px solid rgb(184, 183, 183);
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   
 
   }
@@ -50,6 +55,7 @@
     display: flex;
     justify-content: center;
     height: 75px;
+  
   }
 
   .container .centered-buttons button {
@@ -58,6 +64,9 @@
     border-radius: 40px;
     margin-left: 50px;
     margin-right: 50px;
+    border: 1.5px solid rgb(24, 24, 24);
+    background-color: rgb(234, 234, 234);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
   }
 
@@ -68,18 +77,23 @@
   h2{
     font-size: 60px;
     text-align: center;
+    color: rgb(0, 0, 0);
+    font-family: 'Noto Serif JP', serif;
+    
   }
 
   p{
     font-size: 23px;
     text-align: center;
+    color: rgb(0, 0, 0);
 
 
   }
 
   hr {
-    border: 1px solid rgb(53, 49, 49);
+    border: 1px solid rgb(20, 20, 20);
     margin-top: 5px;
+  
   
   }
 
@@ -93,18 +107,25 @@
   flex-direction: column;
   cursor: pointer;
   position: absolute;
-  top: 33px;
+  top: 20px;
+  height: 50px;
+  width: 50px;
   right: 20px;
-  background-color: black;
+  background-color: rgb(66, 64, 64);
+  border: 1px solid black;
   padding: 10px;
+  box-shadow: 0 4px 8px rgba(207, 207, 207, 0.1);
+
+
 }
 
 
 .bar {
-  width: 25px;
-  height: 3px;
-  background-color: rgb(227, 227, 227);
-  margin: 3px 0;
+  width: 50px;
+  height: 7px;
+  background-color: white;
+  margin: 6.5px 0;
+
 
 }
 
