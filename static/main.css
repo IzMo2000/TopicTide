@@ -1,6 +1,9 @@
 .center{
   display: block; margin: 0 auto;
+
 }
+
+
 .center input {
   margin: 0 auto;
 }
@@ -182,3 +185,6 @@ button:hover {
 a{
   text-decoration: none;
 }
+
+.pagecontainer{
+  border: white;}

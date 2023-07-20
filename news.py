@@ -66,13 +66,13 @@ def randompopular():
         if response.status_code == 200:
             # Convert the response to JSON format
             news_data = response.json()
-            article1 = news_data['articles']
-            art = []
-            for article in article1:
-                art.append((article['title'], article['description'], article['url']))
+            # article1 = news_data['articles']
+            # # art = []
+            # # for article in article1:
+            # #     art.append((article['title'], article['description'], article['url']))
         
     
-            return art
+            return news_data['articles']
         else:
             print(f"Error: {response.status_code} - {response.text}")
             return None
