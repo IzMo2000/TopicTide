@@ -5,7 +5,7 @@
 
 
 .logo {
-  margin-top: 8px;
+  margin-top: 3px;
   margin-left: 15px;
 
     width: 75px;
@@ -35,7 +35,6 @@
   .card {
 
     background: rgb(231, 231, 231);
-
     border-radius: 3px;
     margin: 50px auto;
     width: 500px;
