@@ -155,3 +155,23 @@
 .show {
   display: block;
 }
+
+.search-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: nowrap;
+  
+}
+.search-container form {
+  display: flex;
+  align-items: center;
+}
+
+
+button{
+  cursor: pointer;
+  
+}
+
+button:hover {
+  background-color: hwb(200 55% 0%);}
