@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
+from news import randompopular
 
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
@@ -112,9 +113,14 @@ def home():
 
         # update recent searches section
         pass    # temp stub
+    
+    populararts = randompopular()
+            
+    return render_template("home.html", populararts = populararts)
 
-    return render_template("home.html")
-
+@app.route("/results")
+def results():
+    return render_template("results.html")
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
