@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <h2 style="font-size: 45px; margin-bottom: 25px;">Log In</h2>
-<div class="card" style = "margin-top: 0px;">
+  <div class="card" style = "margin-top: 0px;">
     <form method="POST" action="{{ url_for('login') }}">
       {{ form.hidden_tag() }}
       <div class="form-group">
@@ -23,4 +23,6 @@
       </div>
     </form>
   </div>
+  <button type = "button"> <a href = "/start">Back</a></button>
+
 {% endblock %}

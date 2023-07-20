@@ -172,8 +172,13 @@
 
 button{
   cursor: pointer;
+  display: block;
   
 }
 
 button:hover {
   background-color: hwb(200 55% 0%);}
+
+a{
+  text-decoration: none;
+}
