@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
-<h1>Log In</h1>
-<!-- <div class="form-container">
+<h2 style="font-size: 45px; margin-bottom: 25px;">Log In</h2>
+<div class="card" style = "margin-top: 0px;">
     <form method="POST" action="{{ url_for('login') }}">
       {{ form.hidden_tag() }}
       <div class="form-group">
@@ -22,5 +22,5 @@
         {{ form.submit(class="btn btn-primary") }}
       </div>
     </form>
-  </div> -->
+  </div>
 {% endblock %}

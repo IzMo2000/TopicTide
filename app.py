@@ -23,6 +23,11 @@ def start():
 
     return render_template('start.html', subtitle='Starting Screen') 
 
+@app.route("/settings")
+def settings():
+    
+    return render_template('settings.html', subtitle='Starting Screen') 
+
 
 # define user login page
 @app.route("/login")
@@ -108,7 +113,7 @@ def home():
         # update recent searches section
         pass    # temp stub
 
-    return "<p>Welcome to the home page</p>"
+    return render_template("home.html")
 
 
 # define tracking page
