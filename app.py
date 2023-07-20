@@ -71,7 +71,7 @@ def signup():
         # add user data to database
 
         return redirect(url_for('home')) 
-    return "<p>Welcome to the sign up page</p>"
+    return render_template('signup.html', subtitle='Sign Up')
 
 
 # define home page
@@ -137,7 +137,7 @@ def tracking():
     
 
 
-    return "<p>Welcome to the tracking page</p>"
+    return render_template("tracking.html")
 
 
 # define topic expanding page
@@ -154,8 +154,8 @@ def topic_expand():
     return "<p>Welcome to the topic expansion page</p>"
 
 # define bookmarks page
-@app.route("/bookmarks", methods=['GET', 'POST'])
-def bookmarks():
+@app.route("/bookmark", methods=['GET', 'POST'])
+def bookmark():
     # if remove is clicked
 
         # removes article from bookmarks
@@ -163,7 +163,7 @@ def bookmarks():
     # if next/previous page is clicked
 
         # goes to next/previous results
-    return "<p>Welcome to the bookmarks page</p>" 
+    return render_template("bookmark.html")
 
 
 # define route to update_server, connecting git repo to PythonAnywhere
