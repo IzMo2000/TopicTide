@@ -1,6 +1,8 @@
-.logocontainer{
-  display:flex;
-  align-items: center;
+.center{
+  display: block; margin: 0 auto;
+}
+.center input {
+  margin: 0 auto;
 }
 
 
@@ -74,7 +76,7 @@
   }
 
   h2{
-    font-size: 60px;
+    font-size: 45px;
     text-align: center;
     color: rgb(0, 0, 0);
     font-family: 'Noto Serif JP', serif;
@@ -170,8 +172,13 @@
 
 button{
   cursor: pointer;
+  display: block;
   
 }
 
 button:hover {
   background-color: hwb(200 55% 0%);}
+
+a{
+  text-decoration: none;
+}

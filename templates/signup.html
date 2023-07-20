@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 <h2 style="font-size: 45px; margin-bottom: 25px;">Sign Up</h2>
+
 <div class="card" style="margin-top: 0px; height: 350px;">
     <form method="POST" action="{{ url_for('signup') }}">
       {{ form.hidden_tag() }}
@@ -37,4 +38,6 @@
       </div>
     </form>
   </div>
+  <button type = "button"> <a href = "/start">Back</a></button>
+
 {% endblock %}

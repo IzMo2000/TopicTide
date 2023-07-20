@@ -1,5 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
 <h2> Settings </h2>
+<!-- <div class = "card" style= "width: 600px; height: 400px; padding: 50px"> -->
+<h3 style = "margin-left: 20px;">Search Preferences</h3>
+<form action= "/pick" method="POST">
 
+<p style= "margin-left: 20px; text-align: left;"> Language: </p>
+<input class = "center" style= "width:85%" type="text" name="q" placeholder="Enter a language (ex. English, Spanish)...">
+<p style= "margin-left: 20px; text-align: left;"> Nation: </p>
+<input class = "center" style= "width: 85%" type="text" name="q" placeholder="Enter full nation name (ex. United States, China)...">
+<p style= "margin-left: 20px; text-align: left;"> News Sources: </p>
+<input class = "center" style= "width: 85%" type="text" name="q" placeholder="Enter news source (ex. New York Times)...">
+
+<input class = "center" style = "margin-top:70px; margin-bottom: 70px;width:300px; " type="submit" value ="Enter">
+</form>
+</div>
 {% endblock %}
