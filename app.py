@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request
+from flask import Flask, render_template, url_for, flash, redirect, request, session
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
@@ -48,7 +48,8 @@ def login():
             return redirect(url_for('login'))
     
         # password was valid, direct to home
-        return redirect(url_for('home', username = username)) 
+        session['username'] = username
+        return redirect(url_for('home')) 
 
     return render_template('login.html', subtitle='Login', form=form)
 
@@ -80,7 +81,7 @@ def signup():
         # add user to registered user database
         add_user(username, email, password)
 
-
+        session['username'] = username
         return redirect(url_for('home', username = username))
     return render_template('signup.html', subtitle='Sign Up', form=form)
 
@@ -109,24 +110,24 @@ def home():
 
         # redirect to topic expansion
 
-    if 'username' in request.args:
+    if 'username' not in session:
 
-        # generate articles for home page
-        populararts = randompopular()
-        # validate search form on submit
-        if form.validate_on_submit():
-
-            
-            
-
-            # update recent searches section
-            pass    # temp stub
-
-        username = request.args.get('username', 0)
-
-        return render_template("home.html", populararts = populararts, username = username)
+        return redirect(url_for('start'))
     
-    return redirect(url_for('start'))
+    username = session['username']
+    
+    # generate articles for home page
+    populararts = randompopular()
+
+    # validate search form on submit
+    if form.validate_on_submit():
+
+        # update recent searches section
+        pass    # temp stub
+
+    
+
+    return render_template("home.html", populararts = populararts, username = username)
 
             
     
