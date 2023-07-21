@@ -7,12 +7,11 @@
   .articles-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    grid-gap: 20px;
-    /* display: flex;
-    flex-wrap: wrap; */
-
-    margin-right: 20px; 
+    grid-gap: 100px;
+    margin-right: 20px;
     padding: 50px;
+   
+
   }
 
   .titlecontainer{
@@ -25,4 +24,14 @@
 
   .article{
     padding-bottom: 50px;
+   
+   
   }
+
+  .thumbnail{
+    max-width: 200px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+  } 
+
