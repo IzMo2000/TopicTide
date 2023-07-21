@@ -31,7 +31,7 @@ def settings():
 
 
 # define user login page
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
 
     # grab form data for login
@@ -44,12 +44,15 @@ def login():
         username = form.username.data
         password = form.password.data
         
-        # check that username is exists, password matches
-        if get_user_info not None:
-            
-        
-        # If invalid, redirect to login, link to sign up
+        user_info = get_user_info(username)
 
+
+        # check for invalid entry
+        if not user_info or user_info.password != password:
+            flash('Invalid Username or Password')
+            return redirect(url_for('login'))
+    
+        # password was valid, direct to home
         return redirect(url_for('home')) 
 
     return render_template('login.html', subtitle='Login', form=form)
@@ -71,16 +74,16 @@ def signup():
         
         # check for not unique username
         if check_value_exists(User, User.username, username):
-            flash('Username already exists. Please choose a different one.', 'danger')
-            redirect(url_for('signup'))
+            flash('Username already exists. Please choose a different one.')
+            return redirect(url_for('signup'))
 
         # check for not unique email
         elif check_value_exists(User, User.email, email):
-            flash('Email already registered. Please choose a different one.', 'danger')
-            redirect(url_for('signup'))
+            flash('Email already registered. Please choose a different one.')
+            return redirect(url_for('signup'))
 
         # add user to registered user database
-        add_user(username, email, form.username.password)
+        add_user(username, email, password)
 
 
         return redirect(url_for('home')) 
