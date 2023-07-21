@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
+from flask_login import login_user, logout_user, current_user, login_required
 
 from news import randompopular, search_keyword
 #>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
@@ -46,13 +47,21 @@ def login():
         if not user_info or user_info.password != password:
             flash('Invalid Username or Password')
             return redirect(url_for('login'))
-    
+        
+        session['user_signed_in'] = True
         # password was valid, direct to home
         session['username'] = username
         return redirect(url_for('home')) 
 
     return render_template('login.html', subtitle='Login', form=form)
 
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    if request.method == 'POST' and 'logoutt' in request.form:
+        session['user_signed_in'] = False
+        return redirect(url_for('start'))
+    return render_template('logout.html', subtitle='Logout')
+    
 
 # define signup page
 @app.route("/signup", methods=['GET', 'POST'])

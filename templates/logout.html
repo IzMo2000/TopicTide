@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Logout</h2>
+<div class = "card">
+<p> Are you sure you want to logout?</p>
+<form action="/logout" method="POST">
+<input name = "logoutt" type="submit" value="Log Out">
+</form>
+</div>
+
+{% endblock content %}
