@@ -57,7 +57,7 @@ def randompopular():
     params = {
             'apiKey': api_key,
             'country': 'US',
-            'pageSize': 10}
+            'pageSize': 9}
      
     try:
         response = requests.get(url,params = params)
