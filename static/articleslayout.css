@@ -1,0 +1,37 @@
+.pagecontainer {
+    display: flex;
+    padding-top: 50px;
+    
+  }
+
+  .articles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 100px;
+    margin-right: 20px;
+    padding: 50px;
+   
+
+  }
+
+  .titlecontainer{
+    border: 1.5px solid rgb(184, 183, 183);
+    margin-right: 20px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background: rgb(231, 231, 231);
+    border-radius: 3px;
+  }
+
+  .article{
+    padding-bottom: 50px;
+   
+   
+  }
+
+  .thumbnail{
+    max-width: 200px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+  } 
+

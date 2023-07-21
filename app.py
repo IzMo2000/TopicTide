@@ -1,18 +1,20 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
-from flask_sqlalchemy import SQLAlchemy
+
+from news import randompopular
+#>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
 
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 app.static_url_path = '/static'
 app.static_folder = 'static'
 
-db = SQLAlchemy(app)
-
+#db = SQLAlchemy(app)
+"""
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
@@ -24,7 +26,7 @@ class User(db.Model):
 
 with app.app_context():
     db.create_all()
-
+"""
 # define landing page
 @app.route("/")
 @app.route("/start")
@@ -38,6 +40,11 @@ def start():
         # redirect to login page
 
     return render_template('start.html', subtitle='Starting Screen') 
+
+@app.route("/settings")
+def settings():
+    
+    return render_template('settings.html', subtitle='Starting Screen') 
 
 
 # define user login page
@@ -123,9 +130,14 @@ def home():
 
         # update recent searches section
         pass    # temp stub
+    
+    populararts = randompopular()
+            
+    return render_template("home.html", populararts = populararts)
 
-    return "<p>Welcome to the home page</p>"
-
+@app.route("/results")
+def results():
+    return render_template("results.html")
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
