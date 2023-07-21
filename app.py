@@ -2,6 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
+from flask_login import login_user, logout_user, current_user, login_required
 
 from news import randompopular, search_keyword
 #>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
