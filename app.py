@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 
-from news import randompopular
+from news import randompopular, search_keyword
 #>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
 
 app = Flask(__name__)
@@ -121,23 +121,28 @@ def home():
 
         # redirect to topic expansion
 
+    # generate articles for home page
+    populararts = randompopular()
     # validate search form on submit
     if form.validate_on_submit():
-        
-        # make call to api to retrieve news stories based on form
 
-        # display stories onto page
+        
+        
 
         # update recent searches section
         pass    # temp stub
-    
-    populararts = randompopular()
+
             
     return render_template("home.html", populararts = populararts)
 
-@app.route("/results")
+@app.route("/results", methods=['GET', 'POST'])
 def results():
-    return render_template("results.html")
+
+    if request.method == 'POST':
+        search = request.form['userInput']
+        articles = search_keyword(search)
+     
+    return render_template("results.html", articles = articles, input = search)
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])

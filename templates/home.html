@@ -4,8 +4,8 @@
 <h2 style="font-size: 45px;">Welcome!</h2>
 <div class="search-container">
   <button type="button"><a href="/settings">Settings</a></button>
-  <form action="/search" method="get">
-    <input style="width: 600px; height: 45px; margin-left: 40px; margin-right: 15px;" type="text" name="q" placeholder="Search for news...">
+  <form action="/results" method="POST">
+    <input name = "userInput" style="width: 600px; height: 45px; margin-left: 40px; margin-right: 15px;" type="text"  placeholder="Search for news...">
     <input style="cursor: pointer; border-radius: 40px; font-size: 18px;" type="submit" value="Search">
   </form>
 </div>
@@ -28,7 +28,11 @@
           {% if populararts %}
           {% for article in populararts %}
           <div class="article">
+            {% if article['urlToImage'] %}
             <img style = "border: 2px solid rgb(87, 87, 87);" class="thumbnail" src="{{ article['urlToImage'] }}" alt="{{ article['title'] }}">
+            {% else %}
+            <p></p>
+            {% endif %}
             <h3>{{ article['title'] }}</h3>
             {% if article['description'] %}
             {% if article['description']|length <= 200 %}
