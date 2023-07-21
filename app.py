@@ -106,6 +106,9 @@ def home():
 
     # retrieve searches
     recent_searches = get_recent_searches(username)
+
+    for search in recent_searches:
+        print(search.phrase)
     
     # generate articles for home page
     populararts = randompopular()
@@ -133,11 +136,10 @@ def results():
 
     username = session['username']
 
-    print(username)
-
     recent_searches = get_recent_searches(username)
 
-    print(recent_searches)
+    print("Search:", search)
+    print("Recent Searches:", recent_searches)
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches)
 
