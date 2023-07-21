@@ -1,7 +1,8 @@
 import unittest, sys, os
 
 sys.path.append('../') # imports python file from parent directory
-from app import app, db
+from app import app
+from database_utility import Base
 
 class UsersTests(unittest.TestCase):
 
@@ -10,8 +11,8 @@ class UsersTests(unittest.TestCase):
         app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
         self.app = app.test_client()
         with app.app_context():
-            db.drop_all()
-            db.create_all()
+            Base.drop_all()
+            Base.create_all()
 
     ###############
     #### tests ####
