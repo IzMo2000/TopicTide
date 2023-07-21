@@ -119,6 +119,15 @@ def add_user(username, email, password):
         session.add(new_user)
         session.commit()
 
+def check_value_exists(table, column, value):
+    session = start_session()
+
+    with session as session:
+        query = select(table).where(column == value)
+        result = session.execute(query).first()
+
+    return result is not None
+
 def get_tracked_articles(username):
     session = start_session()
 
