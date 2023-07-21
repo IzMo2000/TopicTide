@@ -48,7 +48,7 @@ def login():
             return redirect(url_for('login'))
     
         # password was valid, direct to home
-        return redirect(url_for('home'), username = username) 
+        return redirect(url_for('home', username = username)) 
 
     return render_template('login.html', subtitle='Login', form=form)
 
