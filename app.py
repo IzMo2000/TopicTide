@@ -17,14 +17,6 @@ app.static_folder = 'static'
 @app.route("/")
 @app.route("/start")
 def start():
-    # if signup button is pressed
-
-        # redirect to signup page
-
-    # if login button is pressed
-
-        # redirect to login page
-
     return render_template('start.html', subtitle='Starting Screen') 
 
 @app.route("/settings")
@@ -56,7 +48,7 @@ def login():
             return redirect(url_for('login'))
     
         # password was valid, direct to home
-        return redirect(url_for('home')) 
+        return redirect(url_for('home'), username = username) 
 
     return render_template('login.html', subtitle='Login', form=form)
 
@@ -89,7 +81,7 @@ def signup():
         add_user(username, email, password)
 
 
-        return redirect(url_for('home')) 
+        return redirect(url_for('home', username = username))
     return render_template('signup.html', subtitle='Sign Up', form=form)
 
 
@@ -117,19 +109,27 @@ def home():
 
         # redirect to topic expansion
 
-    # generate articles for home page
-    populararts = randompopular()
-    # validate search form on submit
-    if form.validate_on_submit():
+    if 'username' in request.args:
 
-        
-        
-
-        # update recent searches section
-        pass    # temp stub
+        # generate articles for home page
+        populararts = randompopular()
+        # validate search form on submit
+        if form.validate_on_submit():
 
             
-    return render_template("home.html", populararts = populararts)
+            
+
+            # update recent searches section
+            pass    # temp stub
+
+        username = request.args.get('username', 0)
+
+        return render_template("home.html", populararts = populararts, username = username)
+    
+    return redirect(url_for('start'))
+
+            
+    
 
 @app.route("/results", methods=['GET', 'POST'])
 def results():

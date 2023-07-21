@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<h2 style="font-size: 45px;">Welcome!</h2>
+<h2 style="font-size: 45px;">Welcome, {{username}}!</h2>
 <div class="search-container">
   <button type="button"><a href="/settings">Settings</a></button>
   <form action="/results" method="POST">
