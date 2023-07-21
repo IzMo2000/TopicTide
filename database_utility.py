@@ -112,11 +112,13 @@ def add_bookmark(username, topic, url, title, description = None, thumbnail = No
 # Limited to 5 searches at a time, deletes last entry and replaces it with most recent search otherwise
 def add_search(username, phrase):
     session = start_session()
-    num_rows = session.query(Search).count()
+    user = session.query(User).filter_by(username=username).first()
+    num_rows = session.query(Search).filter(Search.user == user).count()
     new_search = Search(
         username = username,
         phrase = phrase
     )
+
     with session as session:
         if num_rows < 5:
             session.add(new_search)

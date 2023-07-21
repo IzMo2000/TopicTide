@@ -2,7 +2,7 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
-from flask_login import login_user, logout_user, current_user, login_required
+# from flask_login import login_user, logout_user, current_user, login_required
 
 from news import randompopular, search_keyword
 #>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
@@ -122,6 +122,8 @@ def results():
 
     if request.method == 'POST':
         search = request.form['userInput']
+        print(search)
+        print(session['username'])
         add_search(session['username'],search)
 
     elif request.method == 'GET':
@@ -131,7 +133,11 @@ def results():
 
     username = session['username']
 
+    print(username)
+
     recent_searches = get_recent_searches(username)
+
+    print(recent_searches)
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches)
 
