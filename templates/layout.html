@@ -16,7 +16,7 @@
     </a>
     <h1 class = "title">TOPIC TIDE</h1>
 </div>
-
+{% if session['user_signed_in'] %}
     <div class="navbar">
         <div class="hamburger-menu" onclick="toggleMenu()">
           <div class="bar"></div>
@@ -39,6 +39,7 @@
         }
       </script>   
 </header>
+{% endif %}
     <hr>
     <main>
 
