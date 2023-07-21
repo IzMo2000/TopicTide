@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, flash, redirect, request
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
+from database_utility import *
 
 from news import randompopular
 #>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
@@ -8,25 +9,10 @@ from news import randompopular
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 
 app.static_url_path = '/static'
 app.static_folder = 'static'
 
-#db = SQLAlchemy(app)
-"""
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.email}')"
-
-with app.app_context():
-    db.create_all()
-"""
 # define landing page
 @app.route("/")
 @app.route("/start")
@@ -48,25 +34,28 @@ def settings():
 
 
 # define user login page
-@app.route("/login")
+@app.route("/login", methods=['GET', 'POST'])
 def login():
 
     # grab form data for login
     form = LoginForm()
 
-    # if login button is pressed
-
-        # redirect to login page
-
     # validate login form on submit
     if form.validate_on_submit():
             
         # obtain username and password from form
+        username = form.username.data
+        password = form.password.data
         
-        # check that username is exists, password matches
-        
-        # If invalid, redirect to login, link to sign up
+        user_info = get_user_info(username)
 
+
+        # check for invalid entry
+        if not user_info or user_info.password != password:
+            flash('Invalid Username or Password')
+            return redirect(url_for('login'))
+    
+        # password was valid, direct to home
         return redirect(url_for('home')) 
 
     return render_template('login.html', subtitle='Login', form=form)
@@ -78,20 +67,27 @@ def signup():
     # grab form data for signup
     form = RegistrationForm()
 
-    # if sign up button is pressed
-
-        # redirect to sign up page
-
     # validate signup form on submit
     if form.validate_on_submit():
         
-        # obtain username and email data from form
+        # obtain username,mail, and password data from form
+        username = form.username.data
+        email = form.email.data
+        password = form.password.data
         
-        # check that username and email are unique
-        
-        # if not unique, redirect to signup page
+        # check for not unique username
+        if check_value_exists(User, User.username, username):
+            flash('Username already exists. Please choose a different one.')
+            return redirect(url_for('signup'))
 
-        # add user data to database
+        # check for not unique email
+        elif check_value_exists(User, User.email, email):
+            flash('Email already registered. Please choose a different one.')
+            return redirect(url_for('signup'))
+
+        # add user to registered user database
+        add_user(username, email, password)
+
 
         return redirect(url_for('home')) 
     return render_template('signup.html', subtitle='Sign Up', form=form)

@@ -1,4 +1,7 @@
-
+.alert {
+  color: red;
+  text-align: center;
+}
   
 form .form-group {
     margin-bottom: 20px;
