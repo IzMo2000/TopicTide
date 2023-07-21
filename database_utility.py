@@ -23,8 +23,9 @@ class Bookmark(Base):
 class Search(Base):
     __tablename__ = 'searches'
     id = Column(Integer, primary_key=True)
-    username = Column(String, nullable=False)
+    username = Column(String, ForeignKey('users.username'), nullable=False)
     phrase = Column(String, nullable=False)
+    user = relationship('User', back_populates='searches')
 
 # Tracked Articles class: holds table data for tracked articles
 class TrackedArticle(Base):
@@ -69,6 +70,8 @@ class User(Base):
     tracked_topics = relationship('TrackedTopic', back_populates='user')
 
     bookmarks = relationship('Bookmark', back_populates='user')
+
+    searches = relationship('Search', back_populates='user')
 
 
 

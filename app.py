@@ -50,7 +50,8 @@ def login():
         
         session['user_signed_in'] = True
         # password was valid, direct to home
-        return redirect(url_for('home', username = username)) 
+        session['username'] = username
+        return redirect(url_for('home')) 
 
     return render_template('login.html', subtitle='Login', form=form)
 
@@ -89,7 +90,7 @@ def signup():
         # add user to registered user database
         add_user(username, email, password)
 
-
+        session['username'] = username
         return redirect(url_for('home', username = username))
     return render_template('signup.html', subtitle='Sign Up', form=form)
 
@@ -97,57 +98,42 @@ def signup():
 # define home page
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    # grab form data for news search
-    form = SearchForm()
+    if 'username' not in session:
 
-    # if track button is pressed
-
-        # search bar topic is not empty
-
-            # send tracking data to database
-
-        # search bar topic is empty
-
-            # indicate error
+        return redirect(url_for('start'))
     
-    # if tracked topic title is clicked
+    username = session['username']
 
-        # redirect to tracking page
+    # retrieve searches
+    recent_searches = get_recent_searches(username)
     
-    # if specific tracked topic is clicked
+    # generate articles for home page
+    populararts = randompopular()
 
-        # redirect to topic expansion
+    return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches)
 
-    if 'username' in request.args:
-
-        # generate articles for home page
-        populararts = randompopular()
-        # validate search form on submit
-        if form.validate_on_submit():
-
-            
-            
-
-            # update recent searches section
-            pass    # temp stub
-
-        username = request.args.get('username', 0)
-
-        return render_template("home.html", populararts = populararts, username = username)
-    
-    return redirect(url_for('start'))
 
             
     
 
 @app.route("/results", methods=['GET', 'POST'])
 def results():
+    search = ""
 
     if request.method == 'POST':
         search = request.form['userInput']
-        articles = search_keyword(search)
-     
-    return render_template("results.html", articles = articles, input = search)
+        add_search(session['username'],search)
+
+    elif request.method == 'GET':
+        search = request.args.get('search_query')
+
+    articles = search_keyword(search)
+
+    username = session['username']
+
+    recent_searches = get_recent_searches(username)
+
+    return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches)
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
