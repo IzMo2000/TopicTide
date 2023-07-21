@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request
+from flask import Flask, render_template, url_for, flash, redirect, request, session
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
@@ -46,7 +46,8 @@ def login():
         if not user_info or user_info.password != password:
             flash('Invalid Username or Password')
             return redirect(url_for('login'))
-    
+        
+        session['user_signed_in'] = True
         # password was valid, direct to home
         return redirect(url_for('home', username = username)) 
 
