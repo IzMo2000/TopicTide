@@ -54,6 +54,13 @@ def login():
 
     return render_template('login.html', subtitle='Login', form=form)
 
+@app.route("/logout", methods=['GET', 'POST'])
+def logout():
+    if request.method == 'POST' and 'logoutt' in request.form:
+        session['user_signed_in'] = False
+        return redirect(url_for('start'))
+    return render_template('logout.html', subtitle='Logout')
+    
 
 # define signup page
 @app.route("/signup", methods=['GET', 'POST'])
