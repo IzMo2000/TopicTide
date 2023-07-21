@@ -3,6 +3,9 @@ from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
 
+from news import randompopular
+#>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
+
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
@@ -123,9 +126,14 @@ def home():
 
         # update recent searches section
         pass    # temp stub
+    
+    populararts = randompopular()
+            
+    return render_template("home.html", populararts = populararts)
 
-    return render_template("home.html")
-
+@app.route("/results")
+def results():
+    return render_template("results.html")
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
