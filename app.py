@@ -59,6 +59,7 @@ def login():
 def logout():
     if request.method == 'POST' and 'logoutt' in request.form:
         session['user_signed_in'] = False
+        session.pop('username', None)
         return redirect(url_for('start'))
     return render_template('logout.html', subtitle='Logout')
     
@@ -89,6 +90,7 @@ def signup():
 
         # add user to registered user database
         add_user(username, email, password)
+        session['user_signed_in'] = True
 
         session['username'] = username
         return redirect(url_for('home', username = username))
@@ -146,6 +148,9 @@ def results():
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
 def tracking():
+    if 'username' not in session:
+
+        return redirect(url_for('start'))
     # if specific tracked topic is clicked
 
         # redirect to topic expansion
@@ -176,6 +181,9 @@ def tracking():
 # define topic expanding page
 @app.route("/topic_expand", methods=['GET', 'POST'])
 def topic_expand():
+    if 'username' not in session:
+
+        return redirect(url_for('start'))
     # has same Update/Update Settings/Remove options as tracking pagew
     # going to need to write an external function for those, most likely
 
@@ -189,6 +197,9 @@ def topic_expand():
 # define bookmarks page
 @app.route("/bookmark", methods=['GET', 'POST'])
 def bookmark():
+    if 'username' not in session:
+
+        return redirect(url_for('start'))
     # if remove is clicked
 
         # removes article from bookmarks
