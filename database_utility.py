@@ -124,9 +124,9 @@ def add_search(username, phrase):
             session.add(new_search)
             session.commit()
         elif num_rows == 5:
+            oldest_search = session.query(Search).filter(Search.user == user).order_by(Search.id).first()
+            session.delete(oldest_search)
             session.add(new_search)
-            last_item = session.query(Search).order_by(Search.id.desc()).first()
-            session.delete(last_item)
             session.commit()
 
 # Adds topic to tracked topic database specific to the user
@@ -175,7 +175,7 @@ def get_recent_searches(username):
     session = start_session()
     with session as session:
         user = session.query(User).filter_by(username=username).first()
-        searches = user.searches
+        searches = user.searches[::-1]
     return searches
 
 def get_tracked_articles(username):
