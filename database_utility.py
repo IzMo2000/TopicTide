@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, select
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
+from news import search_keyword
 
 # Create a SQLite database engine
 engine = create_engine('sqlite:///topic_tide.db')
@@ -230,3 +231,24 @@ def remove_topic(id):
 def start_session():
     Session = sessionmaker(bind=engine)
     return Session()
+
+def update_tracked_topics():
+    session = start_session():
+
+    with session as session:
+        topics = session.query(TrackedTopic).all()
+
+        session.query(TrackedArticle).delete()
+
+        session.commit()
+
+    for topic in topics:
+        topic_name = topic.topic
+        username = topic.username
+
+        new_articles = search_keyword(topic_name)['articles']
+
+        for article in new_articles:
+            add_article(username, topic_name, article['url'], article['title'], article['description'], article['urlToImage'])
+
+                     
