@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 <h2 style= "font-size: 45px;">Search Results For: {{input}}</h2>
+
+<form method="POST" action="{{ url_for('track_topic') }}" style="display: flex; justify-content: center;">
+  <input type="hidden" name="topic" value="{{ input }}">
+  <button type="submit" style="font-size: 20px; padding: 10px 20px;">Track Topic</button>
+</form>
+
 <button type = "button"> <a href = "/home"> Back </a> </button>
 
 <div class="pagecontainer">
@@ -23,7 +29,15 @@
         </div>
       <p style="text-align: left;">Tracked Topics:</p>
       <div class="card" style="margin: 0px 5px; width: 5%">
-        <!-- You can add your tracked topics content here -->
+        {% if tracked_topics %}
+          {% for topic in tracked_topics %}
+            <p style="text-align: left;">
+                {{ topic.topic }}
+            </p>
+          {% endfor %}
+        {% else %}
+          <p style="text-align: left;">None</p>
+        {% endif %}
       </div>
     </div>
     <div class="titlecontainer">

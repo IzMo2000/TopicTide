@@ -109,16 +109,14 @@ def home():
     # retrieve searches
     recent_searches = get_recent_searches(username)
 
-    for search in recent_searches:
-        print(search.phrase)
+    # retrieve topics
+    tracked_topics = get_tracked_topics(username)
     
     # generate articles for home page
     populararts = randompopular()
 
-    return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches)
+    return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
-
-            
     
 
 @app.route("/results", methods=['GET', 'POST'])
@@ -127,8 +125,6 @@ def results():
 
     if request.method == 'POST':
         search = request.form['userInput']
-        print(search)
-        print(session['username'])
         add_search(session['username'],search)
 
     elif request.method == 'GET':
@@ -140,10 +136,10 @@ def results():
 
     recent_searches = get_recent_searches(username)
 
-    print("Search:", search)
-    print("Recent Searches:", recent_searches)
+    tracked_topics = get_tracked_topics(username)
 
-    return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches)
+    return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
+
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
@@ -176,6 +172,24 @@ def tracking():
 
 
     return render_template("tracking.html")
+
+@app.route("/track_topic", methods=['POST'])
+def track_topic():
+    # check for valid post request
+    if request.form['topic'] and 'username' in session:
+
+        # store topic name from post request
+        topic = request.form['topic']
+
+        # store topic in database, check for failure to add
+        if not add_topic(session['username'], topic):
+            flash('Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
+                   by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
+        
+        else:
+            flash(f'"{topic}" was successfully added as a tracked topic')
+
+    return redirect(url_for('home'))
 
 
 # define topic expanding page

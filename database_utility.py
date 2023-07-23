@@ -134,7 +134,8 @@ def add_search(username, phrase):
 # Capped at 5 tracked topics, otherwise no more topics are added to the database
 def add_topic(username, topic, nation = None, language = 'en', update_interval = 1, source = None):
     session = start_session()
-    num_rows = session.query(TrackedTopic).count()
+    user = session.query(User).filter_by(username=username).first()
+    num_rows = session.query(TrackedTopic).filter(TrackedTopic.user == user).count()
     new_topic = TrackedTopic(
         username = username,
         topic = topic,
@@ -143,11 +144,19 @@ def add_topic(username, topic, nation = None, language = 'en', update_interval =
         update_interval = update_interval,
         source = source
         )
+    
+    # Check if the topic already exists for the user
+    existing_topic = session.query(TrackedTopic).filter_by(user=user, topic=topic).first()
+
+    if existing_topic:
+        return False
 
     with session as session:
         if num_rows < 5:
             session.add(new_topic)
             session.commit()
+
+            print(new_topic.topic)
             return True
 
         # Else flash that the max number of tracked topics exceeded
@@ -189,6 +198,15 @@ def get_tracked_articles(username):
     
     return tracked_articles
 
+def get_tracked_topics(username):
+    session = start_session()
+
+    with session as session:
+        user = session.query(User).filter_by(username=username).first()
+        tracked_topics = user.tracked_topics
+    
+    return tracked_topics
+
 def get_bookmarks(username):
     session = start_session()
 
@@ -214,17 +232,18 @@ def remove_bookmark(id):
         session.query(Bookmark).filter_by(id=id).delete()
         session.commit()
 
-def remove_topic(id):
+def remove_topic(username, topic):
     session = start_session()
 
     with session as session:
-        removed_topic = session.query(TrackedTopic).filter_by(id=id)
+        removed_topic = session.query(TrackedTopic).filter_by(topic=topic, username=username).first()
 
-        remove_topic.tracked_articles.delete()
+        if removed_topic: 
+            session.query(TrackedArticle).filter_by(topic=topic, username=username).delete()
 
-        remove_topic.delete()
+            session.delete(removed_topic)
 
-        session.commit()
+            session.commit()
 
 
 # starts session, enabling database interaction
