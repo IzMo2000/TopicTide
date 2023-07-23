@@ -2,6 +2,9 @@ from flask import Flask, render_template, url_for, flash, redirect, request, ses
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
+import pandas as pd
+import json
+import ast
 # from flask_login import login_user, logout_user, current_user, login_required
 
 from news import randompopular, search_keyword
@@ -136,6 +139,8 @@ def results():
 
     recent_searches = get_recent_searches(username)
 
+
+
     tracked_topics = get_tracked_topics(username)
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
@@ -145,49 +150,54 @@ def results():
 @app.route("/tracking", methods=['GET', 'POST'])
 def tracking():
     if 'username' not in session:
-
+        
         return redirect(url_for('start'))
-    # if specific tracked topic is clicked
-
-        # redirect to topic expansion
     
-    # if Update is clicked
+    username = session['username']
 
-        # immediately update news stories, display new results
+    topic_previews = []
+
+    tracked_topics = get_tracked_topics(username)
+
+    for topic in tracked_topics:
+        sub_list = []
+        sub_list.append(topic.topic)
+        sub_list += get_topic_articles(username, topic.topic, True)
+        topic_previews.append(sub_list)
     
-    # if Update Settings is clicked
+    print(topic_previews)
 
-        # revalidate entered settings
-
-            # add new settings to database
-    
-    # if Remove is clicked
-
-        # removes tracked topic from database
-
-    # if next/previous page is clicked
-
-        # goes to next/previous results
-    
-
-
-    return render_template("tracking.html")
+    return render_template("tracking.html", topics = topic_previews)
 
 @app.route("/track_topic", methods=['POST'])
 def track_topic():
-    # check for valid post request
-    if request.form['topic'] and 'username' in session:
 
-        # store topic name from post request
+    # check for valid post request
+    if 'username' in session:
+
+        username = session['username']
+
         topic = request.form['topic']
 
+        articles_string = request.form['articles']
+
+        articles_list = ast.literal_eval(articles_string)
+
+        print(articles_list)
+        print(type(articles_list))
+
         # store topic in database, check for failure to add
-        if not add_topic(session['username'], topic):
+        if not add_topic(username, topic):
             flash('Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
                    by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
         
         else:
+            # add corresponding articles to tracked article database
+            for article in articles_list:
+                add_article(username, topic, article['url'], article['title'], article['description'], article['urlToImage'])
+        
             flash(f'"{topic}" was successfully added as a tracked topic')
+
 
     return redirect(url_for('home'))
 
@@ -198,15 +208,14 @@ def topic_expand():
     if 'username' not in session:
 
         return redirect(url_for('start'))
-    # has same Update/Update Settings/Remove options as tracking pagew
-    # going to need to write an external function for those, most likely
+    
+    username = session['username']
+    
+    topic = request.args.get('expanded_topic')
 
-    # if next/previous page is clicked
+    tracked_articles = get_topic_articles(username, topic)
 
-        # goes to next/previous results
-
-
-    return "<p>Welcome to the topic expansion page</p>"
+    return render_template("expandedkey.html", topic_name = topic, articles = tracked_articles)
 
 # define bookmarks page
 @app.route("/bookmark", methods=['GET', 'POST'])
