@@ -43,7 +43,7 @@
       {% endif %}
     </div>
 
-    <p style="text-align: left;">Tracked Topics:</p>
+    <p style="text-align: left;"> Tracked Topics: </p>
     <div class="card" style="margin: 0px 5px; width: 5%">
       {% if tracked_topics %}
           {% for topic in tracked_topics %}
@@ -51,6 +51,7 @@
                 {{ topic.topic }}
             </p>
           {% endfor %}
+          <button id="expandTopics"><a href="/tracking">More</a></button>
       {% else %}
         <p style="text-align: left;">None</p>
       {% endif %}

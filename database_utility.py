@@ -156,7 +156,6 @@ def add_topic(username, topic, nation = None, language = 'en', update_interval =
             session.add(new_topic)
             session.commit()
 
-            print(new_topic.topic)
             return True
 
         # Else flash that the max number of tracked topics exceeded
@@ -179,6 +178,27 @@ def check_value_exists(table, column, value):
         result = session.execute(query).first()
 
     return result is not None
+
+def clear_searches():
+    session = start_session()
+    with session as session:
+        session.query(Search).delete()
+        session.commit()
+
+# get first few articles for topic previews
+def get_topic_articles(username, topic, preview = False):
+    session = start_session()
+
+    with session as session:
+        topic = session.query(TrackedTopic).filter_by(username=username, topic=topic).first()
+
+        if preview:
+            tracked_articles = topic.tracked_articles[:3]
+        
+        else:
+            tracked_articles = topic.tracked_articles
+    
+    return tracked_articles
 
 # Retrieves a user's 5 most recent searches
 def get_recent_searches(username):

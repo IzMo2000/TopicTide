@@ -4,6 +4,7 @@
 
 <form method="POST" action="{{ url_for('track_topic') }}" style="display: flex; justify-content: center;">
   <input type="hidden" name="topic" value="{{ input }}">
+  <input type="hidden" name="articles" value="{{ articles }}">
   <button type="submit" style="font-size: 20px; padding: 10px 20px;">Track Topic</button>
 </form>
 
@@ -35,6 +36,7 @@
                 {{ topic.topic }}
             </p>
           {% endfor %}
+          <button id="expandTopics"><a href="/tracking">More</a></button>
         {% else %}
           <p style="text-align: left;">None</p>
         {% endif %}
