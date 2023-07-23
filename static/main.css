@@ -27,7 +27,7 @@
   }
 
   main{
-  margin-top: 70px;
+  margin-top: 40px;
   }
 
   .container {
@@ -191,7 +191,14 @@ a{
 
   .left-align {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    margin-bottom: 0px;
 
+}
+
+
+.tracked{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
