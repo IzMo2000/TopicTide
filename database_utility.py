@@ -233,7 +233,7 @@ def start_session():
     return Session()
 
 def update_tracked_topics():
-    session = start_session():
+    session = start_session()
 
     with session as session:
         topics = session.query(TrackedTopic).all()
