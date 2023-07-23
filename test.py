@@ -1,5 +1,6 @@
 from database_utility import *
 
-add_user('user_name', 'test@example.com', '123456')
+topics = get_tracked_topics('test_demo')
 
-print(get_user_info('user_name').id)
+for topic in topics:
+    remove_topic('test_demo', topic.topic)
