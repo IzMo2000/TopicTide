@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, session
 from flask_behind_proxy import FlaskBehindProxy
-from forms import RegistrationForm, LoginForm, SearchForm
+from forms import RegistrationForm, LoginForm, SearchForm, valid_languages, valid_countries 
 from database_utility import *
 import pandas as pd
 import json
@@ -30,8 +30,9 @@ def start():
 
 @app.route("/settings")
 def settings():
-    
-    return render_template('settings.html', subtitle='Starting Screen') 
+    lang = valid_languages
+    nations = valid_countries 
+    return render_template('settings.html', subtitle='Starting Screen', lang = lang, nations = nations) 
 
 
 # define user login page
