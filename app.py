@@ -21,6 +21,8 @@ app.static_folder = 'static'
 @app.route("/")
 @app.route("/start")
 def start():
+    if 'username' in session:
+        return redirect(url_for('home'))
     return render_template('start.html', subtitle='Starting Screen') 
 
 @app.route("/settings")
@@ -247,4 +249,4 @@ def webhook():
 
 # define main to run app
 if __name__ == '__main__':               
-    app.run(debug=True, host="0.0.0.0", port = 5001)
+    app.run(debug=True, host="0.0.0.0", port = 5002)

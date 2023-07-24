@@ -4,27 +4,31 @@
 <button type = "button"> <a href = "/tracking"> Back </a> </button>
 
 <h2>Showing Tracked Articles For: "{{topic_name}}"</h2>
-
+<div class="titlecontainer">
+<div class="articles-container">
 {% if articles %}
     {% for article in articles %}
+    <div class="article">
         {% if article.thumbnail %}
         <p>        
-            <img href = "{{ article.url }}" style = "border: 2px solid rgb(87, 87, 87);" class="thumbnail" src="{{ article.thumbnail }}" alt="{{ article.title }}">
+            <img  class="thumbnail" style="border: 2px solid rgb(87, 87, 87);" href = "{{ article.url }}" style = "border: 2px solid rgb(87, 87, 87);" class="thumbnail" src="{{ article.thumbnail }}" alt="{{ article.title }}">
         </p>
         {% endif %}
 
-        <p>   
+        <p style="font-size: 18px;">   
             <a href="{{ article.url }}">
                 {{article.title}}
             </a>
         </p>
 
-        <p>
+        <p style="font-size: 18px;">
             {{article.description}}
         </p>
+    </div>
     {% endfor %}
 {% endif %}
-        
+</div>
+</div>
 
 
 {% endblock %}
