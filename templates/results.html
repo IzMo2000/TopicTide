@@ -29,10 +29,10 @@
             {% endif %}
         </div>
       <h2 style="text-align: left;font-size: 22px; margin-top: 50px;">Tracked Topics:</h2>
-      <div class="card" style="margin: 0px 5px;  width: 5%">
+      <div class="card" style="margin: 0px 5px; text-align: left; width: 5%;">
         {% if tracked_topics %}
           {% for topic in tracked_topics %}
-            <p style="text-align: left; font-size: 20px;">
+            <p style= "font-size: 20px;">
                 {{ topic.topic }}
             </p>
           {% endfor %}
@@ -53,7 +53,7 @@
               {% else %}
               <p></p>
               {% endif %}
-              <h3 style = "font-size: 18px;"><a href="{{ article['url'] }}">{{ article['title'] }}</a></h3>
+              <p style = "font-size: 18px;"><a href="{{ article['url'] }}">{{ article['title'] }}</a></p>
               {% if article['description'] %}
               {% if article['description']|length <= 200 %}
         <p style="font-size: 15px;">{{ article['description'] }}</p>

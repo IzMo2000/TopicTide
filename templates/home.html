@@ -69,7 +69,7 @@
             {% else %}
             <p></p>
             {% endif %}
-            <h3 style = "font-size: 18px;"><a href="{{ article['url'] }}">{{ article['title'] }}</a></h3>
+            <p style = "font-size: 18px;"><a href="{{ article['url'] }}">{{ article['title'] }}</a></p>
             {% if article['description'] %}
             {% if article['description']|length <= 200 %}
       <p style="font-size: 15px;">{{ article['description'] }}</p>
