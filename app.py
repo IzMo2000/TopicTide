@@ -17,10 +17,15 @@ app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
 app.static_url_path = '/static'
 app.static_folder = 'static'
 
+
+
 # define landing page
 @app.route("/")
 @app.route("/start")
 def start():
+    if 'username' in session:
+        return redirect(url_for('home'))
+
     return render_template('start.html', subtitle='Starting Screen') 
 
 @app.route("/settings")
@@ -198,6 +203,23 @@ def track_topic():
         
             flash(f'"{topic}" was successfully added as a tracked topic')
 
+
+    return redirect(url_for('home'))
+
+# define clear searches route
+@app.route("/clear_searches", methods=['POST'])
+def clear_searches():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+
+    username = session['username']
+
+    clear_recent_searches(username)
+
+    flash('Recent Searches successfully cleared')
+
+    if request.form['topic']:
+        return redirect(url_for('results', search_query = request.form['topic']))
 
     return redirect(url_for('home'))
 
