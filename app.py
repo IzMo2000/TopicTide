@@ -43,16 +43,9 @@ def settings():
     if request.method == 'POST':
         language = request.form['language']
         print("LANG: ", language)
-    if request.method == 'POST':
-        nation = request.form['nation']
-        print("NATION: ", nation)
-    if request.method == 'POST':
         sources = request.form['sources']
         print("SOURCE: ", sources)
     
-    add_settings(username, language, nation, sources)
-    print(user_info.lang)
-
     return render_template('settings.html', subtitle='Starting Screen') 
 
 
@@ -119,7 +112,7 @@ def signup():
             return redirect(url_for('signup'))
 
         # add user to registered user database
-        add_user(username, email, password, 'sp', '', '')
+        add_user(username, email, password, 'en', '', '')
         session['user_signed_in'] = True
 
         session['username'] = username
@@ -147,7 +140,6 @@ def home():
 
     return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
-    
 
 @app.route("/results", methods=['GET', 'POST'])
 def results():
@@ -195,6 +187,27 @@ def tracking():
     print(topic_previews)
 
     return render_template("tracking.html", topics = topic_previews)
+
+
+@app.route("/update_settings", methods=['POST'])
+def update_settings():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    if request.form['sources']:
+        source = request.form['sources']
+    else: 
+        source = ''
+    if request.form['language']:
+        language = request.form['language']
+    else:
+        language = 'en'
+    
+    username = session['username']
+
+    add_settings(username, language, '', source)
+    return redirect(url_for('home'))
+
 
 @app.route("/track_topic", methods=['POST'])
 def track_topic():

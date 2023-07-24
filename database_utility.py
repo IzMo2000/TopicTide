@@ -97,16 +97,13 @@ Base.metadata.create_all(engine)
 
 def add_settings(username, language, nation, source):
     session = start_session()
-
-    settings = User_Settings(
-        username = username,
-        language = language,
-        nation = nation,
-        source = source
-    )
     
     with session as session:
-        session.add(settings)
+        user = session.query(User).filter_by(username=username).first()
+
+        user.lang = language
+        user.nation = nation
+        user.source = source
         session.commit()
 
 def add_article(username, topic, url, title, description = None, thumbnail = None):
