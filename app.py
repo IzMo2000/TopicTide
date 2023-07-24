@@ -235,6 +235,21 @@ def remove_tracked():
 
     return redirect(url_for('tracking'))
 
+@app.route("/remove_bookmark", methods=['POST'])
+def remove_bookmark():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+    
+    username = session['username']
+
+    remove_id = request.form['id']
+
+    remove_bookmark(id)
+
+    flash(f'Article successfully removed from bookmarks.')
+
+    return redirect(url_for('bookmark'))
+
 # define topic expanding page
 @app.route("/topic_expand", methods=['GET', 'POST'])
 def topic_expand():
@@ -256,14 +271,13 @@ def bookmark():
     if 'username' not in session:
 
         return redirect(url_for('start'))
-    # if remove is clicked
+    
+    username = session['username']
 
-        # removes article from bookmarks
+    # get user's bookmarks
+    bookmarks = get_bookmarks(username)
 
-    # if next/previous page is clicked
-
-        # goes to next/previous results
-    return render_template("bookmark.html")
+    return render_template("bookmark.html", bookmarks = bookmarks)
 
 
 # define route to update_server, connecting git repo to PythonAnywhere
