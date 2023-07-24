@@ -169,8 +169,6 @@ def tracking():
         sub_list.append(topic.topic)
         sub_list += get_topic_articles(username, topic.topic, True)
         topic_previews.append(sub_list)
-    
-    print(topic_previews)
 
     return render_template("tracking.html", topics = topic_previews)
 
@@ -187,9 +185,6 @@ def track_topic():
         articles_string = request.form['articles']
 
         articles_list = ast.literal_eval(articles_string)
-
-        print(articles_list)
-        print(type(articles_list))
 
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
