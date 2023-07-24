@@ -174,7 +174,6 @@ def tracking():
 
 @app.route("/track_topic", methods=['POST'])
 def track_topic():
-
     # check for valid post request
     if 'username' in session:
 
@@ -188,7 +187,7 @@ def track_topic():
 
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
-            flash('Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
+            flash('Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
                    by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
         
         else:
@@ -200,6 +199,33 @@ def track_topic():
 
 
     return redirect(url_for('home'))
+
+@app.route("/track_bookmark", methods=['POST'])
+def track_bookmark():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+
+    username = session['username']
+
+    topic = request.form['topic']
+
+    article_string = request.form['article']
+
+    article = ast.literal_eval(article_string)
+
+    if not add_bookmark(username, article['url'], article['title'], topic,
+                                article['description'], article['urlToImage']):
+        flash('Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>')
+    
+    else:
+        flash('Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+    
+    if topic:
+        return redirect(url_for("results"), search_query = topic)
+    
+    return redirect(url_for("home"))
+    
+
 
 # define clear searches route
 @app.route("/clear_searches", methods=['POST'])
