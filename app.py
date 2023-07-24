@@ -23,9 +23,23 @@ app.static_folder = 'static'
 def start():
     return render_template('start.html', subtitle='Starting Screen') 
 
-@app.route("/settings")
+@app.route("/settings", methods=['GET', 'POST'])
 def settings():
+
+    langauge = "en"
+    nation = "us"
+    sources = None
+
+    username = session['username']
+    if request.method == 'POST' and 'language' in request.form:
+        language = request.form['language']
+    if request.method == 'POST' and 'nation' in request.form:
+        nation = request.form['nation']
+    if request.method == 'POST' and 'sources' in request.form:
+        sources = request.form['sources']
     
+    add_settings(username, language, nation, sources)
+
     return render_template('settings.html', subtitle='Starting Screen') 
 
 
@@ -92,7 +106,7 @@ def signup():
             return redirect(url_for('signup'))
 
         # add user to registered user database
-        add_user(username, email, password)
+        add_user(username, email, password, 'en', 'us', None)
         session['user_signed_in'] = True
 
         session['username'] = username
@@ -133,13 +147,12 @@ def results():
     elif request.method == 'GET':
         search = request.args.get('search_query')
 
-    articles = search_keyword(search)
-
     username = session['username']
+    user_settings = get_user_settings(username)
+
+    articles = search_keyword(search, language=user_settings[1])
 
     recent_searches = get_recent_searches(username)
-
-
 
     tracked_topics = get_tracked_topics(username)
 

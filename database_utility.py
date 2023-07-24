@@ -1,7 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, select
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, Session
 from news import search_keyword
+
 
 # Create a SQLite database engine
 engine = create_engine('sqlite:///topic_tide.db')
@@ -58,6 +59,16 @@ class TrackedTopic(Base):
 
     tracked_articles = relationship('TrackedArticle', back_populates='tracked_topics')
 
+# Class for storing user settings/preferences 
+class User_Settings(Base):
+    __tablename__ = 'settings'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)
+    language = Column(String, nullable=False)
+    nation = Column(String, nullable=False)
+    source = Column(String, nullable=False)
+
+
 # User class: holds table data for registered users
 class User(Base):
     __tablename__ = 'users'
@@ -65,6 +76,9 @@ class User(Base):
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
+    lang = Column(String, nullable=False)
+    nation = Column(String, nullable=False)
+    source = Column(String, nullable=False)
 
     tracked_articles = relationship('TrackedArticle', back_populates='user')
 
@@ -78,6 +92,20 @@ class User(Base):
 
 # create all tables
 Base.metadata.create_all(engine)
+
+def add_settings(username, language, nation, source):
+    session = start_session()
+
+    settings = User_Settings(
+        username = username,
+        language = language,
+        nation = nation,
+        source = source
+    )
+    
+    with session as session:
+        session.add(settings)
+        session.commit()
 
 def add_article(username, topic, url, title, description = None, thumbnail = None):
     session = start_session()
@@ -162,10 +190,17 @@ def add_topic(username, topic, nation = None, language = 'en', update_interval =
         elif num_rows == 5:
             return False
 
-def add_user(username, email, password):
+def add_user(username, email, password, language='en', nation='us', source=None):
     session = start_session()
-    new_user = User(username = username, email = email, password = password)
-
+    new_user = User(
+        username = username, 
+        email = email, 
+        password = password,
+        lang = language,
+        nation = nation,
+        source = source
+    )
+    
     with session as session:
         session.add(new_user)
         session.commit()
@@ -244,6 +279,14 @@ def get_user_info(username):
         info = session.query(User).filter_by(username=username).first()
     
     return info
+
+def get_user_settings(username):
+    session = start_session()
+
+    with session as session:
+        settings = session.query(User_Settings).filter_by(username=username).first()
+    
+    return settings
 
 def remove_bookmark(id):
     session = start_session()
