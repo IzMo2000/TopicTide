@@ -1,5 +1,20 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% if messages[0].startswith('Topic Limit') %}
+    <div style="color: red; text-align: center;">
+      {{ messages[0] }}
+    </div>
+    {% else %}
+    <div style="font-weight: bold; text-align: center;">
+      {{ messages[0] }}
+    </div>
+    {% endif %}
+  {% endif %}
+{% endwith %}
+
 <h2 style= "font-size: 45px;">Search Results For: {{input}}</h2>
 
 <form method="POST" action="{{ url_for('track_topic') }}" style="display: flex; justify-content: center;">
@@ -23,7 +38,10 @@
                 </p>
               
                 {% endfor %}
-                <button id="clearRecentSearchesButton">Clear</button>
+                <form action="/clear_searches" method="POST">
+                    <input type="hidden" name="topic" value="{{ input }}">
+                    <button id="clearRecentSearchesButton" type="submit">Clear</button>
+                </form>
             {% else %}
             <p style="text-align: left;">None</p>
             {% endif %}

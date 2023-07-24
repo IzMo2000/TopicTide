@@ -179,10 +179,10 @@ def check_value_exists(table, column, value):
 
     return result is not None
 
-def clear_searches():
+def clear_recent_searches(username):
     session = start_session()
     with session as session:
-        session.query(Search).delete()
+        session.query(Search).filter(Search.username == username).delete()
         session.commit()
 
 # get first few articles for topic previews
@@ -281,13 +281,19 @@ def update_tracked_topics():
 
         session.commit()
 
-    for topic in topics:
-        topic_name = topic.topic
-        username = topic.username
+        for topic in topics:
+                topic_name = topic.topic
+                username = topic.username
 
-        new_articles = search_keyword(topic_name)['articles']
+                new_articles = search_keyword(topic_name)
 
-        for article in new_articles:
-            add_article(username, topic_name, article['url'], article['title'], article['description'], article['urlToImage'])
+                for article in new_articles:
+                    add_article(username, topic_name, article['url'], article['title'], 
+                                article['description'], article['urlToImage'])
 
-                     
+        session.commit()
+
+    with session as session:           
+        
+        
+        session.commit()
