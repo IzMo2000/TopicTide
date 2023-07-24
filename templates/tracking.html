@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div style="font-weight: bold; text-align: center;">
+        {{ messages[0] }}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <h2>Tracked Topics</h2>
     {% if topics %}
     {% for topic in topics %}
@@ -13,7 +22,12 @@
             {{topic[0]}}
         </a>
     </p>
-    <p> Stop Tracking </p>
+    <p>
+        <form action="/remove_tracked" method="POST">
+            <input type="hidden" name="topic" value="{{topic[0]}}">
+            <button id="clearRecentSearchesButton" type="submit">Stop Tracking</button>
+        </form>
+    </p>
     </div>
     <div class = "card" style = "height: 125px; margin-top: 6px; width: 84%">
             {% for article in topic[1:] %}
