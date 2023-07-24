@@ -19,11 +19,13 @@
   }
   
   .title {
-   margin-top: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    margin-top: 20px;
     left: 95px;
     margin-left: 20px;
-    font-family: 'Noto Serif JP', serif;
-    font-weight: 600;
+
+    font-weight: bolder;
   }
 
   main{
@@ -78,15 +80,18 @@
     background-color: hwb(200 55% 0%);
   }
 
-  h2{
+  h2, h3{
     font-size: 45px;
     text-align: center;
     color: rgb(0, 0, 0);
-    font-family: 'Noto Serif JP', serif;
+    /* font-family: 'Noto Serif JP', serif; */
+     font-family: 'Poppins', sans-serif;
     
   }
 
   p{
+    font-family: 'Noto Serif JP', serif;
+
     font-size: 23px;
     text-align: center;
     color: rgb(0, 0, 0);
@@ -153,6 +158,7 @@
   color: #fff;
   font-size: 20px;
   text-decoration: none;
+  font-family: 'Poppins', sans-serif;;
   
 }
 
@@ -171,12 +177,17 @@
   display: flex;
   align-items: center;
 }
-
-
+.form-group{
+  font-family: 'Noto Serif JP', serif;
+}
 button{
+  font-family: 'Noto Serif JP', serif;
   cursor: pointer;
   display: block;
   
+}
+input{
+  font-family: 'Noto Serif JP', serif;
 }
 
 button:hover {
@@ -201,4 +212,11 @@ a{
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+}
+
+
+.card-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }

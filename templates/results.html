@@ -27,11 +27,11 @@
 
 <div class="pagecontainer">
     <div style="margin-left: 20px; margin-right: 30px;">
-      <p style="text-align: left; margin-left: 5px;">Recent Searches:</p>
+      <h2 style="text-align: left; margin-left: 5px; font-size: 22px;">Recent Searches:</h2>
         <div class="card" style="margin: 0px 5px; width: 5%;">
             {% if recent_searches %}
-                {% for search in recent_searches %}
-                <p style="text-align: left;">
+                {% for search in recent_searches [-6:]%}
+                <p style="text-align: left; font-size: 20px;">
                     <a href="{{ url_for('results', search_query=search.phrase) }}">
                         {{ search.phrase }}
                     </a>
@@ -46,11 +46,11 @@
             <p style="text-align: left;">None</p>
             {% endif %}
         </div>
-      <p style="text-align: left;">Tracked Topics:</p>
-      <div class="card" style="margin: 0px 5px; width: 5%">
+      <h2 style="text-align: left;font-size: 22px; margin-top: 50px;">Tracked Topics:</h2>
+      <div class="card" style="margin: 0px 5px; text-align: left; width: 5%;">
         {% if tracked_topics %}
           {% for topic in tracked_topics %}
-            <p style="text-align: left;">
+            <p style= "font-size: 20px;">
                 {{ topic.topic }}
             </p>
           {% endfor %}
@@ -67,21 +67,21 @@
             {% for article in articles %}
             <div class="article">
                 {% if article['urlToImage'] %}
-              <img style = "border: 2px solid rgb(87, 87, 87);" class="thumbnail" src="{{ article['urlToImage'] }}" alt="{{ article['title'] }}">
+              <img style = "border: 2px solid rgb(0, 0, 0);" class="thumbnail" src="{{ article['urlToImage'] }}" alt="{{ article['title'] }}">
               {% else %}
               <p></p>
               {% endif %}
-              <h3>{{ article['title'] }}</h3>
+              <p style = "font-size: 18px;"><a href="{{ article['url'] }}">{{ article['title'] }}</a></p>
               {% if article['description'] %}
               {% if article['description']|length <= 200 %}
-        <p style="font-size: 18px;">{{ article['description'] }}</p>
+        <p style="font-size: 15px;">{{ article['description'] }}</p>
     {% else %}
-      <p style="font-size: 18px;">{{ article['description'][:197] }}...</p>
+      <p style="font-size: 15px;">{{ article['description'][:197] }}...</p>
       {% endif %}
       {% else %}
       <p> </p>
       {% endif %}
-      <button style="background-color: white;" type="button"><a href="{{ article['url'] }}">Read More</a></button>
+      <button style="background-color: white;" type="button"><a href="">Bookmark</a></button>
     </div>
     {% endfor %}
     {% else %}

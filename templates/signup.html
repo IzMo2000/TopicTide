@@ -10,7 +10,8 @@
 {% endwith %}
 
 <h2 style="font-size: 45px; margin-bottom: 25px;">Sign Up</h2>
-
+<div class = "contain" style = " display: flex;flex-direction: column;
+align-items: center;" >
 <div class="card" style="margin-top: 0px; height: 350px;">
     <form method="POST" action="{{ url_for('signup') }}">
       {{ form.hidden_tag() }}
@@ -47,6 +48,7 @@
       </div>
     </form>
   </div>
-  <button type = "button"> <a href = "/start">Back</a></button>
 
+  <a href = "/start"> <button type = "button" class = "logonbuttons"> Back </button></a>
+</div>
 {% endblock %}
