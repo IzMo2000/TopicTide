@@ -1,7 +1,9 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, select
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, select, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, Session
 from news import search_keyword
+
+# from flask_sqlalchemy import SQLAlchemy
 
 
 # Create a SQLite database engine
@@ -76,9 +78,9 @@ class User(Base):
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
-    lang = Column(String, nullable=False)
-    nation = Column(String, nullable=False)
-    source = Column(String, nullable=False)
+    lang = Column(String, nullable=True)
+    nation = Column(String, nullable=True)
+    source = Column(String, nullable=True)
 
     tracked_articles = relationship('TrackedArticle', back_populates='user')
 
@@ -191,6 +193,8 @@ def add_topic(username, topic, nation = None, language = 'en', update_interval =
             return False
 
 def add_user(username, email, password, language='en', nation='us', source=None):
+    metadata = MetaData()
+    metadata.clear()
     session = start_session()
     new_user = User(
         username = username, 

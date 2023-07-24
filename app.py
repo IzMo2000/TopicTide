@@ -3,6 +3,7 @@ from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
 import pandas as pd
+from flask_sqlalchemy import SQLAlchemy
 import json
 import ast
 # from flask_login import login_user, logout_user, current_user, login_required
@@ -23,22 +24,34 @@ app.static_folder = 'static'
 def start():
     return render_template('start.html', subtitle='Starting Screen') 
 
+@app.route("/db")
+def db():
+    with engine.connection() as connection:
+        query_result = connection.execute(db.select(database_utility.User))
+        print(query_result.fetchall())
+
 @app.route("/settings", methods=['GET', 'POST'])
 def settings():
 
-    langauge = "en"
-    nation = "us"
-    sources = None
-
     username = session['username']
-    if request.method == 'POST' and 'language' in request.form:
+    user_info = get_user_info(username)
+
+    language = user_info.lang
+    nation = user_info.nation
+    sources = user_info.source
+
+    if request.method == 'POST':
         language = request.form['language']
-    if request.method == 'POST' and 'nation' in request.form:
+        print("LANG: ", language)
+    if request.method == 'POST':
         nation = request.form['nation']
-    if request.method == 'POST' and 'sources' in request.form:
+        print("NATION: ", nation)
+    if request.method == 'POST':
         sources = request.form['sources']
+        print("SOURCE: ", sources)
     
     add_settings(username, language, nation, sources)
+    print(user_info.lang)
 
     return render_template('settings.html', subtitle='Starting Screen') 
 
@@ -106,7 +119,7 @@ def signup():
             return redirect(url_for('signup'))
 
         # add user to registered user database
-        add_user(username, email, password, 'en', 'us', None)
+        add_user(username, email, password, 'sp', '', '')
         session['user_signed_in'] = True
 
         session['username'] = username
@@ -148,9 +161,10 @@ def results():
         search = request.args.get('search_query')
 
     username = session['username']
-    user_settings = get_user_settings(username)
+    user_info = get_user_info(username)
+    print(user_info.lang)
 
-    articles = search_keyword(search, language=user_settings[1])
+    articles = search_keyword(search, language=user_info.lang)
 
     recent_searches = get_recent_searches(username)
 
