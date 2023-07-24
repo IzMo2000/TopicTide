@@ -164,6 +164,16 @@ def results():
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
+# add bookmark
+# @app.route("/add_bookmark")
+# def add_bookmark():
+#     if 'username' not in session:
+#         return redirect(url_for('start'))
+
+#     username = session['username']
+
+#     add_bookmark(username, )
+
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
