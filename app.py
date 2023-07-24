@@ -17,12 +17,15 @@ app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
 app.static_url_path = '/static'
 app.static_folder = 'static'
 
+
+
 # define landing page
 @app.route("/")
 @app.route("/start")
 def start():
     if 'username' in session:
         return redirect(url_for('home'))
+
     return render_template('start.html', subtitle='Starting Screen') 
 
 @app.route("/settings")
@@ -166,8 +169,6 @@ def tracking():
         sub_list.append(topic.topic)
         sub_list += get_topic_articles(username, topic.topic, True)
         topic_previews.append(sub_list)
-    
-    print(topic_previews)
 
     return render_template("tracking.html", topics = topic_previews)
 
@@ -185,9 +186,6 @@ def track_topic():
 
         articles_list = ast.literal_eval(articles_string)
 
-        print(articles_list)
-        print(type(articles_list))
-
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
             flash('Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
@@ -203,6 +201,54 @@ def track_topic():
 
     return redirect(url_for('home'))
 
+# define clear searches route
+@app.route("/clear_searches", methods=['POST'])
+def clear_searches():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+
+    username = session['username']
+
+    clear_recent_searches(username)
+
+    flash('Recent Searches successfully cleared')
+
+    if request.form['topic']:
+        return redirect(url_for('results', search_query = request.form['topic']))
+
+    return redirect(url_for('home'))
+
+# define remove topic page
+@app.route("/remove_tracked", methods=['POST'])
+def remove_tracked():
+    if 'username' not in session:
+
+        return redirect(url_for('start'))
+    
+    username = session['username']
+
+    topic = request.form['topic']
+
+    remove_topic(username, topic)
+
+    flash(f'"{topic}" successfully removed.')
+
+    return redirect(url_for('tracking'))
+
+@app.route("/remove_bookmark", methods=['POST'])
+def remove_bookmark():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+    
+    username = session['username']
+
+    remove_id = request.form['id']
+
+    remove_bookmark(id)
+
+    flash(f'Article successfully removed from bookmarks.')
+
+    return redirect(url_for('bookmark'))
 
 # define topic expanding page
 @app.route("/topic_expand", methods=['GET', 'POST'])
@@ -225,14 +271,13 @@ def bookmark():
     if 'username' not in session:
 
         return redirect(url_for('start'))
-    # if remove is clicked
+    
+    username = session['username']
 
-        # removes article from bookmarks
+    # get user's bookmarks
+    bookmarks = get_bookmarks(username)
 
-    # if next/previous page is clicked
-
-        # goes to next/previous results
-    return render_template("bookmark.html")
+    return render_template("bookmark.html", bookmarks = bookmarks)
 
 
 # define route to update_server, connecting git repo to PythonAnywhere

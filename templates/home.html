@@ -37,7 +37,10 @@
                 </a>
             </p>
           {% endfor %}
-          <button id="clearRecentSearchesButton">Clear</button>
+          <form action="/clear_searches" method="POST">
+            <input type="hidden" name="topic" value="">
+            <button id="clearRecentSearchesButton" type="submit">Clear</button>
+          </form>
       {% else %}
         <p style="text-align: left; font-size: 18px;">None</p>
       {% endif %}
