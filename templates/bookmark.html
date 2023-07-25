@@ -12,32 +12,44 @@
 <h2>Bookmarks </h2>
 
 {% if bookmarks %}
+<h2 style = "font-size: 35px; text-align: left; margin: 20px 20px;">Topic</h2>
     {% for bookmark in bookmarks %}
-        <div  class = "bookmark" style = "margin: 0px 20px; display: flex;
-        justify-content: left;">
+    <div class = "align-items: center;">
+    <div class = "bookmark" style = "display: flex;
+        justify-content: left; ">
+      
+        <div style = " margin: 0px 20px; text-align: center; word-wrap: break-word; width: 200px;">
         {% if bookmark.topic %}
-            <p>{{bookmark.topic}}</p>
+
+            <p style = "font-size: 22px; white-space: nowrap">{{bookmark.topic}}</p>
         
         {% else %}
-            <p>N/A<p>
+            <p style = "font-size: 22px; white-space: nowrap">Trending News<p>
+             
 
         {% endif %}
+    </div>
 
         {% if bookmark.thumbnail %}
               <img style = "border: 2px solid rgb(0, 0, 0);" class="thumbnail" src="{{ bookmark.thumbnail }}" alt="{{ bookmark.title }}">
         {% endif %}
         <p>
+            <div style =  "font-size: 25px; word-wrap: break-word;">  
             <a href="{{ bookmark.url }}">
                 {{ bookmark.title }}
             </a>
         </p>
-        </div>
-
+    </div>
+</div>
+</div>
+        
         <form action="/untrack_bookmark" method="POST">
             <input type="hidden" name="url" value="{{bookmark.url}}">
-            <button style = "text-align: left;margin: 0px 20px;">Remove</button>
+            <button style = " margin-bottom: 70px; text-align: left; margin-left: 20px;">Remove</button>
         </form>
+
     {% endfor %}
+
 {% else %}
     <p>No Bookmarks Added.</p>
 {% endif %}
