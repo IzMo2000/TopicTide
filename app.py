@@ -151,7 +151,7 @@ def results():
     user_info = get_user_info(username)
     print(user_info.lang)
 
-    articles = search_keyword(search, language=user_info.lang)
+    articles = search_keyword(search, language=user_info.lang, domain=user_info.source)
 
     recent_searches = get_recent_searches(username)
 
@@ -197,11 +197,11 @@ def update_settings():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    if request.form['sources']:
+    if 'sources' in request.form:
         source = request.form['sources']
     else: 
-        source = ''
-    if request.form['language']:
+        source = None
+    if 'language' in request.form:
         language = request.form['language']
     else:
         language = 'en'
