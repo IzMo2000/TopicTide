@@ -3,7 +3,7 @@
 <h2> Settings </h2>
 
 <h2 style="margin-left: 40px; font-size: 37px; font-weight: 600; text-align: left;">Search Preferences</h2>
-<form action="/pick" method="POST" style="text-align: center;">
+<form action="/update_settings" method="POST" style="text-align: center;">
         <p> Language: </p>
         <select name="language">
             <option disabled selected>Select a language...</option>
@@ -13,7 +13,7 @@
         </select>
 
         <p style = "margin-top: 60px;">  News Sources: </p>
-        <input class="center" style = "width: 600px;" type="text" name="q" placeholder="Enter a website domain (ex. www.nytimes.com)...">
+        <input class="center" style = "width: 600px;" type="text" name="sources" placeholder="Enter a website domain (ex. www.nytimes.com)...">
 
         <input class="center" style="margin-top: 70px; margin-bottom: 70px; width: 300px;" type="submit" value="Enter">
 </form>

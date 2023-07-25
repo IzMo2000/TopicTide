@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request, session
+from flask import Flask, render_template, url_for, flash, redirect, request, session, render_template_string
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm, valid_languages, valid_countries 
 from database_utility import *
@@ -151,7 +151,7 @@ def results():
     user_info = get_user_info(username)
     print(user_info.lang)
 
-    articles = search_keyword(search, language=user_info.lang)
+    articles = search_keyword(search, language=user_info.lang, domain=user_info.source)
 
     recent_searches = get_recent_searches(username)
 
@@ -197,11 +197,11 @@ def update_settings():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    if request.form['sources']:
+    if 'sources' in request.form:
         source = request.form['sources']
     else: 
-        source = ''
-    if request.form['language']:
+        source = None
+    if 'language' in request.form:
         language = request.form['language']
     else:
         language = 'en'
@@ -214,7 +214,6 @@ def update_settings():
 
 @app.route("/track_topic", methods=['POST'])
 def track_topic():
-
     # check for valid post request
     if 'username' in session:
 
@@ -228,7 +227,7 @@ def track_topic():
 
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
-            flash('Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
+            flash('Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
                    by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
         
         else:
@@ -240,6 +239,35 @@ def track_topic():
 
 
     return redirect(url_for('home'))
+
+@app.route("/track_bookmark", methods=['POST'])
+def track_bookmark():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+
+    username = session['username']
+
+    topic = request.form['topic']
+
+    article_string = request.form['article']
+
+    article = ast.literal_eval(article_string)
+
+    if not add_bookmark(username, article['url'], article['title'], topic,
+                                article['description'], article['urlToImage']):
+        flash_str = 'Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
+    
+    else:
+        flash_str = ('Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+
+    flash(render_template_string(flash_str))
+    
+    if topic:
+        return redirect(url_for("results", search_query = topic))
+    
+    return redirect(url_for("home"))
+    
+
 
 # define clear searches route
 @app.route("/clear_searches", methods=['POST'])
@@ -275,18 +303,18 @@ def remove_tracked():
 
     return redirect(url_for('tracking'))
 
-@app.route("/remove_bookmark", methods=['POST'])
-def remove_bookmark():
+@app.route("/untrack_bookmark", methods=['POST'])
+def untrack_bookmark():
     if 'username' not in session:
         return redirect(url_for('start'))
     
     username = session['username']
 
-    remove_id = request.form['id']
+    url = request.form['url']
 
-    remove_bookmark(id)
+    remove_bookmark(username, url)
 
-    flash(f'Article successfully removed from bookmarks.')
+    flash('Article successfully removed from bookmarks.')
 
     return redirect(url_for('bookmark'))
 

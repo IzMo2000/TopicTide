@@ -121,8 +121,18 @@ def add_article(username, topic, url, title, description = None, thumbnail = Non
         session.add(new_article)
         session.commit()
 
-def add_bookmark(username, topic, url, title, description = None, thumbnail = None):
+def add_bookmark(username, url, title, topic = None, description = None, thumbnail = None):
     session = start_session()
+
+    existing_bookmark = session.query(Bookmark).filter_by(username=username, url=url).first()
+    
+    if existing_bookmark:
+        return False
+    
+    num_rows = session.query(Bookmark).filter(Bookmark.username == username).count()
+    if num_rows > 10:
+        return False
+
     new_bookmark = Bookmark(
         username = username,
         topic = topic,
@@ -135,6 +145,8 @@ def add_bookmark(username, topic, url, title, description = None, thumbnail = No
     with session as session:
         session.add(new_bookmark)
         session.commit()
+    
+    return True
 
 # Adds search result to search result database specific to the user
 # Limited to 5 searches at a time, deletes last entry and replaces it with most recent search otherwise
@@ -303,11 +315,11 @@ def get_user_settings(username):
     
     return settings
 
-def remove_bookmark(id):
+def remove_bookmark(username, url):
     session = start_session()
 
     with session as session:
-        session.query(Bookmark).filter_by(id=id).delete()
+        session.query(Bookmark).filter_by(username=username, url=url).delete()
         session.commit()
 
 def remove_topic(username, topic):
