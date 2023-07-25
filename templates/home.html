@@ -27,11 +27,11 @@
 
 <div class="pagecontainer">
   <div style="margin-left: 20px; margin-right: 30px;">
-    <h2 style="text-align: left; margin-left: 5px; font-size: 22px;">Recent Searches:</h2>
-    <div class="card" style="margin: 0px 5px; width: 5%;">
+    <h2 style="text-align: center; margin-left: 5px; font-size: 20px;">Recent Searches:</h2>
+    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
       {% if recent_searches %}
           {% for search in recent_searches[-6:]%}
-            <p style = "font-size: 20px;" style="text-align: left;">
+            <p style = "font-size: 20px; width: 200%;">
                 <a href="{{ url_for('results', search_query=search.phrase) }}">
                     {{ search.phrase }}
                 </a>
@@ -42,21 +42,21 @@
             <button id="clearRecentSearchesButton" type="submit">Clear</button>
           </form>
       {% else %}
-        <p style="text-align: left; font-size: 18px;">None</p>
+        <p style="font-size: 18px;">None</p>
       {% endif %}
     </div>
 
-    <h2 style="text-align: left; font-size: 22px; margin-top: 50px;"> Tracked Topics: </h2>
-    <div class="card" style="margin: 0px 5px; width: 5%">
+    <h2 style="text-align: center; margin-left: 5px; font-size: 20px;">Tracked Topics:</h2>
+    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
       {% if tracked_topics %}
           {% for topic in tracked_topics%}
-            <p style="text-align: left; font-size: 20px;">
+            <p style="font-size: 20px; width: 200%;">
                 {{ topic.topic }}
             </p>
           {% endfor %}
           <button id="expandTopics"><a href="/tracking">More</a></button>
       {% else %}
-        <p style="text-align: left; font-size: 18px;">None</p>
+        <p style="font-size: 20px; ">None</p>
       {% endif %}
     </div>
   </div>
