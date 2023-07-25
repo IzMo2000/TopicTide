@@ -365,8 +365,8 @@ def webhook():
 
 # define main to run app
 if __name__ == '__main__':
-<<<<<<< HEAD
+#<<<<<<< HEAD
     #schedule_topic_updates()               
-=======
->>>>>>> master
+#=======
+#>>>>>>> master
     app.run(debug=True, host="0.0.0.0", port = 5002)
