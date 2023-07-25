@@ -15,7 +15,7 @@
   {% endif %}
 {% endwith %}
 
-<h2 style= "font-size: 45px;">Search Results For: {{input}}</h2>
+<h2 class = "pagetitle" style= "font-size: 45px;">Search Results For: {{input}}</h2>
 
 <form method="POST" action="{{ url_for('track_topic') }}" style="display: flex; justify-content: center;">
   <input type="hidden" name="topic" value="{{ input }}">
@@ -23,12 +23,12 @@
   <button type="submit" style="font-size: 20px; padding: 10px 20px;">Track Topic</button>
 </form>
 
-<button type = "button"> <a href = "/home"> Back </a> </button>
+<button style = "margin-left: 20px;" type = "button"> <a href = "/home"> Back </a> </button>
 
 <div class="pagecontainer">
   <div style="margin-left: 20px; margin-right: 30px;">
-    <h2 style="text-align: center; margin-left: 5px; font-size: 20px;">Tracked Topics:</h2>
-    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
+    <h2 class = "pagetitle" style="text-align: center; margin-left: 5px; font-size: 20px;">Tracked Topics:</h2>
+    <div class="card" style="margin-top: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
       {% if tracked_topics %}
           {% for topic in tracked_topics%}
             <p style="font-size: 20px; width: 200%;">
@@ -40,8 +40,9 @@
         <p style="font-size: 20px; ">None</p>
       {% endif %}
     </div>
-    <h2 style="text-align: center; margin-left: 5px; font-size: 20px;">Recent Searches:</h2>
-    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
+   
+    <h2 class = "pagetitle" style="text-align: center; margin-left: 5px; font-size: 20px;">Recent Searches:</h2>
+    <div class="card" style="margin-top: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%; margin-right: 30px">
       {% if recent_searches %}
           {% for search in recent_searches[-6:]%}
             <p style = "font-size: 20px; width: 200%;">
@@ -58,6 +59,7 @@
         <p style="font-size: 20px;">None</p>
       {% endif %}
     </div>
+
   </div>
     <div class="titlecontainer">
       <!-- style="display: flex; margin-left: 50px; font-size: 25px; margin-bottom: 0px; -->

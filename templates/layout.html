@@ -11,6 +11,7 @@
 </head>
 <body>
    <header>
+    <div class="header">
     <div class = "container">
     <a href="{{ url_for('start') }}">
     <img src="{{ url_for('static', filename='media/logo.png') }}" alt="Logo" class="logo">
@@ -42,10 +43,14 @@
       </script>   
 </header>
 {% endif %}
-    <hr>
+</div>
+    <!-- <hr> -->
+    <div class = "content1">
     <main>
-
+      
     {% block content %}{% endblock %}
+      </div>
+</div>
 </main>
 </body>
 </html>
