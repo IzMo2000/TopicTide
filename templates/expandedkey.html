@@ -5,7 +5,7 @@
 {% with messages = get_flashed_messages() %}
   {% if messages %}
     {% if messages[0].startswith('Error') %}
-    <div style="color: red; text-align: center;">
+    <div style="color: rgb(254, 157, 157); text-align: center;">
       {{ messages[0] | safe }}
     </div>
     {% else %}

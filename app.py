@@ -63,7 +63,7 @@ def login():
 
         # check for invalid entry
         if not user_info or user_info.password != password:
-            flash(' Invalid Username or Password ')
+            flash('<span style = "color: rgb(254, 157, 157);">Invalid Username or Password</span>')
             return redirect(url_for('login'))
         
         session['user_signed_in'] = True
@@ -100,14 +100,14 @@ def signup():
         
         # check for not unique username
         if check_value_exists(User, User.username, username):
-            flash(' Username already exists. Please choose a different one.')
+            flash('<span style = "color: rgb(254, 157, 157);"> Username already exists. Please choose a different one.</span>')
             #flash('<span style="color: red;">"Username already exists. Please choose a different one."</span>', 'error')
 
             return redirect(url_for('signup'))
 
         # check for not unique email
         elif check_value_exists(User, User.email, email):
-            flash('Email already registered. Please choose a different one.')
+            flash('<span style = "color: rgb(254, 157, 157);"> Email already registered. Please choose a different one.</span>')
             return redirect(url_for('signup'))
 
         # add user to registered user database
@@ -229,15 +229,15 @@ def track_topic():
 
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
-            flash(' Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
-                   by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
+            flash('<span style = "color: rgb(254, 157, 157);font-size:18px;"> Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
+                   by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left</span>')
         
         else:
             # add corresponding articles to tracked article database
             for article in articles_list:
                 add_article(username, topic, article['url'], article['title'], article['description'], article['urlToImage'])
         
-            flash(f'<span style="color: green; font-size: 20px;">"{topic}" was successfully added as a tracked topic')
+            flash(f'<span style="color: #69FF8C; font-size: 20px;">{topic} was successfully added as a tracked topic</span>')
 
 
     return redirect(url_for('home'))
@@ -269,10 +269,10 @@ def track_bookmark():
 
     if not add_bookmark(username, url, title, topic,
                                 description, thumbnail):
-        flash_str = '<span style="color: red;font-size: 20px;"> Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
+        flash_str = ('<span style="color:rgb(254, 157, 157);font-size: 20px;"> Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a></span>')
     
     else:
-        flash_str = ('<span style="color: green; font-size: 20px;"> Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+        flash_str = ('<span style="color: #69FF8C; font-size: 20px;"> Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a></span>')
 
     flash(render_template_string(flash_str))
     
@@ -293,7 +293,7 @@ def clear_searches():
 
     clear_recent_searches(username)
 
-    flash('<span style="color: green; font-size: 20px;"> Recent Searches successfully cleared')
+    flash('<span style="color: #69FF8C; font-size: 20px;"> Recent Searches successfully cleared</span>')
 
     if request.form['topic']:
         return redirect(url_for('results', search_query = request.form['topic']))
@@ -313,7 +313,7 @@ def remove_tracked():
 
     remove_topic(username, topic)
 
-    flash(f'"{topic}" successfully removed.')
+    flash(f'"<span style = "color: #69FF8C; font-size: 20px;" {topic}" successfully removed.</span>')
 
     return redirect(url_for('tracking'))
 
