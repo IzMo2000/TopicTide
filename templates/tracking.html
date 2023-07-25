@@ -2,6 +2,7 @@
 {% block content %}
 
 {% with messages = get_flashed_messages() %}
+
   {% if messages %}
     {% if messages[0].startswith('Error') %}
     <div style="color: red; text-align: center;">

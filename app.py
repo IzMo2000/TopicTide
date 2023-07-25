@@ -63,7 +63,7 @@ def login():
 
         # check for invalid entry
         if not user_info or user_info.password != password:
-            flash('Invalid Username or Password')
+            flash(' Invalid Username or Password ')
             return redirect(url_for('login'))
         
         session['user_signed_in'] = True
@@ -100,7 +100,9 @@ def signup():
         
         # check for not unique username
         if check_value_exists(User, User.username, username):
-            flash('Username already exists. Please choose a different one.')
+            flash(' Username already exists. Please choose a different one.')
+            #flash('<span style="color: red;">"Username already exists. Please choose a different one."</span>', 'error')
+
             return redirect(url_for('signup'))
 
         # check for not unique email
@@ -126,7 +128,7 @@ def home():
         return redirect(url_for('start'))
     
     username = session['username']
-
+    user_info = get_user_info(username)
     # retrieve searches
     recent_searches = get_recent_searches(username)
 
@@ -134,7 +136,7 @@ def home():
     tracked_topics = get_tracked_topics(username)
     
     # generate articles for home page
-    populararts = randompopular()
+    populararts = randompopular(valid_countries[user_info.lang])
 
     return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
@@ -201,18 +203,14 @@ def update_settings():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    if 'sources' in request.form:
-        source = request.form['sources']
-    else: 
-        source = None
     if 'language' in request.form:
-        language = request.form['language']
+        language = valid_languages[request.form['language']]
     else:
         language = 'en'
     
     username = session['username']
 
-    add_settings(username, language, '', source)
+    add_settings(username, language, '', '')
     return redirect(url_for('home'))
 
 
@@ -231,7 +229,7 @@ def track_topic():
 
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
-            flash('Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
+            flash(' Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
                    by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
         
         else:
@@ -239,7 +237,7 @@ def track_topic():
             for article in articles_list:
                 add_article(username, topic, article['url'], article['title'], article['description'], article['urlToImage'])
         
-            flash(f'"{topic}" was successfully added as a tracked topic')
+            flash(f'<span style="color: green; font-size: 20px;">"{topic}" was successfully added as a tracked topic')
 
 
     return redirect(url_for('home'))
@@ -271,10 +269,10 @@ def track_bookmark():
 
     if not add_bookmark(username, url, title, topic,
                                 description, thumbnail):
-        flash_str = 'Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
+        flash_str = '<span style="color: red;font-size: 20px;"> Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
     
     else:
-        flash_str = ('Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+        flash_str = ('<span style="color: green; font-size: 20px;"> Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
 
     flash(render_template_string(flash_str))
     
@@ -295,7 +293,7 @@ def clear_searches():
 
     clear_recent_searches(username)
 
-    flash('Recent Searches successfully cleared')
+    flash('<span style="color: green; font-size: 20px;"> Recent Searches successfully cleared')
 
     if request.form['topic']:
         return redirect(url_for('results', search_query = request.form['topic']))
@@ -388,6 +386,6 @@ def webhook():
         return 'Wrong event type', 400
 
 
-# define main to run app
-if __name__ == '__main__':           
+       
+if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0", port = 5002)
