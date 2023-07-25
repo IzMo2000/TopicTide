@@ -51,10 +51,12 @@
       {% if tracked_topics %}
           {% for topic in tracked_topics%}
             <p style="font-size: 20px; width: 200%;">
+              <a href="{{url_for('topic_expand', search_query = topic.topic)}}">
                 {{ topic.topic }}
+              </a>
             </p>
           {% endfor %}
-          <button id="expandTopics"><a href="/tracking">More</a></button>
+          <button onclick="window.location.href='{{ url_for('tracking') }}'" id="expandTopics">Expand</button>
       {% else %}
         <p style="font-size: 20px; ">None</p>
       {% endif %}
@@ -82,9 +84,10 @@
       <p> </p>
       {% endif %}
       <form method="POST" action="{{ url_for('track_bookmark') }}">
-                <input type="hidden" name="topic" value="{{ input }}">
-                <input type="hidden" name="article" value="{{ article }}">
-                <button type="submit" style="background-color: white;">Bookmark</button>
+          <input type="hidden" name="topic" value="{{ input }}">
+          <input type="hidden" name="article" value="{{ article }}">
+          <input type="hidden" name="redirect" value="results">
+          <button type="submit" style="background-color: white;">Bookmark</button>
       </form>
     </div>
     {% endfor %}

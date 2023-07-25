@@ -7,8 +7,7 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 import ast
 import git
-# from flask_login import login_user, logout_user, current_user, login_required
-
+import datetime
 from news import randompopular, search_keyword
 #>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
 
@@ -68,8 +67,10 @@ def login():
             return redirect(url_for('login'))
         
         session['user_signed_in'] = True
+
         # password was valid, direct to home
         session['username'] = username
+
         return redirect(url_for('home')) 
 
     return render_template('login.html', subtitle='Login', form=form)
@@ -112,6 +113,7 @@ def signup():
         session['user_signed_in'] = True
 
         session['username'] = username
+
         return redirect(url_for('home', username = username))
     return render_template('signup.html', subtitle='Sign Up', form=form)
 
@@ -160,16 +162,6 @@ def results():
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
-# add bookmark
-# @app.route("/add_bookmark")
-# def add_bookmark():
-#     if 'username' not in session:
-#         return redirect(url_for('start'))
-
-#     username = session['username']
-
-#     add_bookmark(username, )
-
 
 # define tracking page
 @app.route("/tracking", methods=['GET', 'POST'])
@@ -177,8 +169,19 @@ def tracking():
     if 'username' not in session:
         
         return redirect(url_for('start'))
+
+    current_datetime = datetime.datetime.now()
+    
+    if 'hour' not in session:
+        session['hour'] = current_datetime.hour
     
     username = session['username']
+
+    hour = session['hour']
+
+    if current_datetime.hour != hour:
+        update_tracked_topics(username)
+        session['hour'] = current_datetime.hour
 
     topic_previews = []
 
@@ -250,12 +253,24 @@ def track_bookmark():
 
     topic = request.form['topic']
 
-    article_string = request.form['article']
+    redirect_route = request.form['redirect']
 
-    article = ast.literal_eval(article_string)
+    if request.form['article']:
+        article = request.form['article']
+        article = ast.literal_eval(article)
+        url = article['url']
+        title = article['title']
+        description = article['description']
+        thumbnail = article['urlToImage']
+    
+    else:
+        url = request.form['url']
+        title = request.form['title']
+        description = request.form['description']
+        thumbnail = request.form['thumbnail']
 
-    if not add_bookmark(username, article['url'], article['title'], topic,
-                                article['description'], article['urlToImage']):
+    if not add_bookmark(username, url, title, topic,
+                                description, thumbnail):
         flash_str = 'Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
     
     else:
@@ -263,10 +278,10 @@ def track_bookmark():
 
     flash(render_template_string(flash_str))
     
-    if topic:
-        return redirect(url_for("results", search_query = topic))
+    if redirect != 'home':
+        return redirect(url_for(redirect_route, search_query = topic))
     
-    return redirect(url_for("home"))
+    return redirect(url_for(redirect_route))
     
 
 
@@ -325,11 +340,23 @@ def topic_expand():
     if 'username' not in session:
 
         return redirect(url_for('start'))
+    current_datetime = datetime.datetime.now()
+    
+    if 'hour' not in session:
+        session['hour'] = current_datetime.hour
     
     username = session['username']
-    
-    topic = request.args.get('expanded_topic')
 
+    topic = request.args.get('search_query')
+
+    hour = session['hour']
+
+    print(topic)
+
+    if current_datetime.hour != hour:
+        update_topic(username, topic)
+        session['hour'] = current_datetime.hour
+    
     tracked_articles = get_topic_articles(username, topic)
 
     return render_template("expandedkey.html", topic_name = topic, articles = tracked_articles)
@@ -353,7 +380,7 @@ def bookmark():
 @app.route("/update_server", methods=['POST'])
 def webhook():
     if request.method == 'POST':
-        repo = git.Repo('/home/RopicTide/TopicTide')
+        repo = git.Repo('/home/TopicTide/TopicTide')
         origin = repo.remotes.origin
         origin.pull()
         return 'Updated PythonAnywhere successfully', 200
@@ -362,6 +389,5 @@ def webhook():
 
 
 # define main to run app
-if __name__ == '__main__':
-    schedule_topic_updates()               
+if __name__ == '__main__':           
     app.run(debug=True, host="0.0.0.0", port = 5002)

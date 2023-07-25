@@ -3,7 +3,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, Session
 from news import search_keyword
 import schedule
-import time
 
 # from flask_sqlalchemy import SQLAlchemy
 
@@ -220,6 +219,7 @@ def add_user(username, email, password, language='en', nation='us', source=None)
         session.add(new_user)
         session.commit()
 
+
 def check_value_exists(table, column, value):
     session = start_session()
 
@@ -238,6 +238,8 @@ def clear_recent_searches(username):
 # get first few articles for topic previews
 def get_topic_articles(username, topic, preview = False):
     session = start_session()
+
+    print(username)
 
     with session as session:
         topic = session.query(TrackedTopic).filter_by(username=username, topic=topic).first()
@@ -343,28 +345,47 @@ def start_session():
     Session = sessionmaker(bind=engine)
     return Session()
 
-def update_tracked_topics():
+def update_topic(username, topic):
+    session = start_session()
+    
+    with session as session:
+        session.query(TrackedArticle).filter_by(username=username, topic=topic).delete()
+        user_info = get_user_info(username)
+
+        new_articles = search_keyword(topic, language = user_info.lang)
+        
+        session.commit()
+    
     session = start_session()
 
     with session as session:
-        topics = session.query(TrackedTopic).all()
-
-        session.query(TrackedArticle).delete()
-
+        for article in new_articles:
+            add_article(username, topic_name, article['url'], article['title'], 
+                        article['description'], article['urlToImage'])
+        
         session.commit()
 
+def update_tracked_topics(username):
+    session = start_session()
+
+    with session as session:
+        topics = session.query(TrackedTopic).filter_by(username=username).all()
+
+        session.query(TrackedArticle).filter_by(username=username).delete()
+
+        user_info = get_user_info(username)
+
+        session.commit
+
+    session = start_session()
+
+    with session as session:
         for topic in topics:
                 topic_name = topic.topic
-                username = topic.username
-
-                new_articles = search_keyword(topic_name)
+                new_articles = search_keyword(topic_name, language = user_info.lang)
 
                 for article in new_articles:
                     add_article(username, topic_name, article['url'], article['title'], 
                                 article['description'], article['urlToImage'])
-
+        
         session.commit()
-
-def schedule_topic_updates():
-    # Schedule the update_tracked_topics function to run at midnight every day
-    schedule.every().day.at("00:00").do(update_tracked_topics)
