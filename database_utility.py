@@ -1,9 +1,12 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, select
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, select, MetaData
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, Session
 from news import search_keyword
 import schedule
 import time
+
+# from flask_sqlalchemy import SQLAlchemy
+
 
 # Create a SQLite database engine
 engine = create_engine('sqlite:///topic_tide.db')
@@ -60,6 +63,16 @@ class TrackedTopic(Base):
 
     tracked_articles = relationship('TrackedArticle', back_populates='tracked_topics')
 
+# Class for storing user settings/preferences 
+class User_Settings(Base):
+    __tablename__ = 'settings'
+    id = Column(Integer, primary_key=True)
+    username = Column(String, nullable=False)
+    language = Column(String, nullable=False)
+    nation = Column(String, nullable=False)
+    source = Column(String, nullable=False)
+
+
 # User class: holds table data for registered users
 class User(Base):
     __tablename__ = 'users'
@@ -67,6 +80,9 @@ class User(Base):
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
+    lang = Column(String, nullable=True)
+    nation = Column(String, nullable=True)
+    source = Column(String, nullable=True)
 
     tracked_articles = relationship('TrackedArticle', back_populates='user')
 
@@ -80,6 +96,17 @@ class User(Base):
 
 # create all tables
 Base.metadata.create_all(engine)
+
+def add_settings(username, language, nation, source):
+    session = start_session()
+    
+    with session as session:
+        user = session.query(User).filter_by(username=username).first()
+
+        user.lang = language
+        user.nation = nation
+        user.source = source
+        session.commit()
 
 def add_article(username, topic, url, title, description = None, thumbnail = None):
     session = start_session()
@@ -96,8 +123,18 @@ def add_article(username, topic, url, title, description = None, thumbnail = Non
         session.add(new_article)
         session.commit()
 
-def add_bookmark(username, topic, url, title, description = None, thumbnail = None):
+def add_bookmark(username, url, title, topic = None, description = None, thumbnail = None):
     session = start_session()
+
+    existing_bookmark = session.query(Bookmark).filter_by(username=username, url=url).first()
+    
+    if existing_bookmark:
+        return False
+    
+    num_rows = session.query(Bookmark).filter(Bookmark.username == username).count()
+    if num_rows > 10:
+        return False
+
     new_bookmark = Bookmark(
         username = username,
         topic = topic,
@@ -110,6 +147,8 @@ def add_bookmark(username, topic, url, title, description = None, thumbnail = No
     with session as session:
         session.add(new_bookmark)
         session.commit()
+    
+    return True
 
 # Adds search result to search result database specific to the user
 # Limited to 5 searches at a time, deletes last entry and replaces it with most recent search otherwise
@@ -164,10 +203,19 @@ def add_topic(username, topic, nation = None, language = 'en', update_interval =
         elif num_rows == 5:
             return False
 
-def add_user(username, email, password):
+def add_user(username, email, password, language='en', nation='us', source=None):
+    metadata = MetaData()
+    metadata.clear()
     session = start_session()
-    new_user = User(username = username, email = email, password = password)
-
+    new_user = User(
+        username = username, 
+        email = email, 
+        password = password,
+        lang = language,
+        nation = nation,
+        source = source
+    )
+    
     with session as session:
         session.add(new_user)
         session.commit()
@@ -205,37 +253,51 @@ def get_topic_articles(username, topic, preview = False):
 # Retrieves a user's 5 most recent searches
 def get_recent_searches(username):
     session = start_session()
+
+    searches = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
-        searches = user.searches[::-1]
+        if user:
+            searches = user.searches[::-1]
     return searches
 
 def get_tracked_articles(username):
     session = start_session()
 
+    tracked_articles = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
 
-        tracked_articles = user.tracked_articles
+        if user:
+            tracked_articles = user.tracked_articles
     
     return tracked_articles
 
 def get_tracked_topics(username):
     session = start_session()
 
+    tracked_topics = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
-        tracked_topics = user.tracked_topics
+
+        if user:
+            tracked_topics = user.tracked_topics
     
     return tracked_topics
 
 def get_bookmarks(username):
     session = start_session()
 
+    bookmarks = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
 
-        bookmarks = user.bookmarks
+        if user:
+            bookmarks = user.bookmarks
     
     return bookmarks
 
@@ -247,11 +309,19 @@ def get_user_info(username):
     
     return info
 
-def remove_bookmark(id):
+def get_user_settings(username):
     session = start_session()
 
     with session as session:
-        session.query(Bookmark).filter_by(id=id).delete()
+        settings = session.query(User_Settings).filter_by(username=username).first()
+    
+    return settings
+
+def remove_bookmark(username, url):
+    session = start_session()
+
+    with session as session:
+        session.query(Bookmark).filter_by(username=username, url=url).delete()
         session.commit()
 
 def remove_topic(username, topic):

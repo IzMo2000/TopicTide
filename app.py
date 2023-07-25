@@ -1,8 +1,9 @@
-from flask import Flask, render_template, url_for, flash, redirect, request, session
+from flask import Flask, render_template, url_for, flash, redirect, request, session, render_template_string
 from flask_behind_proxy import FlaskBehindProxy
-from forms import RegistrationForm, LoginForm, SearchForm
+from forms import RegistrationForm, LoginForm, SearchForm, valid_languages, valid_countries 
 from database_utility import *
 import pandas as pd
+from flask_sqlalchemy import SQLAlchemy
 import json
 import ast
 # from flask_login import login_user, logout_user, current_user, login_required
@@ -28,10 +29,19 @@ def start():
 
     return render_template('start.html', subtitle='Starting Screen') 
 
-@app.route("/settings")
+@app.route("/db")
+def db():
+    with engine.connection() as connection:
+        query_result = connection.execute(db.select(database_utility.User))
+        print(query_result.fetchall())
+
+@app.route("/settings", methods=['GET', 'POST'])
 def settings():
-    
-    return render_template('settings.html', subtitle='Starting Screen') 
+    lang = valid_languages
+    nations = valid_countries 
+    return render_template('settings.html', subtitle='Starting Screen', lang = lang, nations = nations) 
+
+   
 
 
 # define user login page
@@ -97,7 +107,7 @@ def signup():
             return redirect(url_for('signup'))
 
         # add user to registered user database
-        add_user(username, email, password)
+        add_user(username, email, password, 'en', '', '')
         session['user_signed_in'] = True
 
         session['username'] = username
@@ -125,7 +135,6 @@ def home():
 
     return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
-    
 
 @app.route("/results", methods=['GET', 'POST'])
 def results():
@@ -138,17 +147,27 @@ def results():
     elif request.method == 'GET':
         search = request.args.get('search_query')
 
-    articles = search_keyword(search)
-
     username = session['username']
+    user_info = get_user_info(username)
+    print(user_info.lang)
+
+    articles = search_keyword(search, language=user_info.lang, domain=user_info.source)
 
     recent_searches = get_recent_searches(username)
-
-
 
     tracked_topics = get_tracked_topics(username)
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
+
+# add bookmark
+# @app.route("/add_bookmark")
+# def add_bookmark():
+#     if 'username' not in session:
+#         return redirect(url_for('start'))
+
+#     username = session['username']
+
+#     add_bookmark(username, )
 
 
 # define tracking page
@@ -172,9 +191,29 @@ def tracking():
 
     return render_template("tracking.html", topics = topic_previews)
 
+
+@app.route("/update_settings", methods=['POST'])
+def update_settings():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    if 'sources' in request.form:
+        source = request.form['sources']
+    else: 
+        source = None
+    if 'language' in request.form:
+        language = request.form['language']
+    else:
+        language = 'en'
+    
+    username = session['username']
+
+    add_settings(username, language, '', source)
+    return redirect(url_for('home'))
+
+
 @app.route("/track_topic", methods=['POST'])
 def track_topic():
-
     # check for valid post request
     if 'username' in session:
 
@@ -188,7 +227,7 @@ def track_topic():
 
         # store topic in database, check for failure to add
         if not add_topic(username, topic):
-            flash('Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
+            flash('Error: Topic Limit Exceeded (max 5), or topic is already tracked. You can remove topics \
                    by accessing the tracking menu via the nav bar (top right) or clicking "Tracked Topics" on the left')
         
         else:
@@ -200,6 +239,35 @@ def track_topic():
 
 
     return redirect(url_for('home'))
+
+@app.route("/track_bookmark", methods=['POST'])
+def track_bookmark():
+    if 'username' not in session:
+        return redirect(url_for('start'))
+
+    username = session['username']
+
+    topic = request.form['topic']
+
+    article_string = request.form['article']
+
+    article = ast.literal_eval(article_string)
+
+    if not add_bookmark(username, article['url'], article['title'], topic,
+                                article['description'], article['urlToImage']):
+        flash_str = 'Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
+    
+    else:
+        flash_str = ('Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+
+    flash(render_template_string(flash_str))
+    
+    if topic:
+        return redirect(url_for("results", search_query = topic))
+    
+    return redirect(url_for("home"))
+    
+
 
 # define clear searches route
 @app.route("/clear_searches", methods=['POST'])
@@ -235,18 +303,18 @@ def remove_tracked():
 
     return redirect(url_for('tracking'))
 
-@app.route("/remove_bookmark", methods=['POST'])
-def remove_bookmark():
+@app.route("/untrack_bookmark", methods=['POST'])
+def untrack_bookmark():
     if 'username' not in session:
         return redirect(url_for('start'))
     
     username = session['username']
 
-    remove_id = request.form['id']
+    url = request.form['url']
 
-    remove_bookmark(id)
+    remove_bookmark(username, url)
 
-    flash(f'Article successfully removed from bookmarks.')
+    flash('Article successfully removed from bookmarks.')
 
     return redirect(url_for('bookmark'))
 
