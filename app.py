@@ -3,6 +3,7 @@ from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
 import pandas as pd
+from flask_sqlalchemy import SQLAlchemy
 import json
 import ast
 # from flask_login import login_user, logout_user, current_user, login_required
@@ -28,8 +29,27 @@ def start():
 
     return render_template('start.html', subtitle='Starting Screen') 
 
-@app.route("/settings")
+@app.route("/db")
+def db():
+    with engine.connection() as connection:
+        query_result = connection.execute(db.select(database_utility.User))
+        print(query_result.fetchall())
+
+@app.route("/settings", methods=['GET', 'POST'])
 def settings():
+
+    username = session['username']
+    user_info = get_user_info(username)
+
+    language = user_info.lang
+    nation = user_info.nation
+    sources = user_info.source
+
+    if request.method == 'POST':
+        language = request.form['language']
+        print("LANG: ", language)
+        sources = request.form['sources']
+        print("SOURCE: ", sources)
     
     return render_template('settings.html', subtitle='Starting Screen') 
 
@@ -97,7 +117,7 @@ def signup():
             return redirect(url_for('signup'))
 
         # add user to registered user database
-        add_user(username, email, password)
+        add_user(username, email, password, 'en', '', '')
         session['user_signed_in'] = True
 
         session['username'] = username
@@ -125,7 +145,6 @@ def home():
 
     return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
-    
 
 @app.route("/results", methods=['GET', 'POST'])
 def results():
@@ -138,17 +157,27 @@ def results():
     elif request.method == 'GET':
         search = request.args.get('search_query')
 
-    articles = search_keyword(search)
-
     username = session['username']
+    user_info = get_user_info(username)
+    print(user_info.lang)
+
+    articles = search_keyword(search, language=user_info.lang)
 
     recent_searches = get_recent_searches(username)
-
-
 
     tracked_topics = get_tracked_topics(username)
 
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
+
+# add bookmark
+# @app.route("/add_bookmark")
+# def add_bookmark():
+#     if 'username' not in session:
+#         return redirect(url_for('start'))
+
+#     username = session['username']
+
+#     add_bookmark(username, )
 
 
 # define tracking page
@@ -171,6 +200,27 @@ def tracking():
         topic_previews.append(sub_list)
 
     return render_template("tracking.html", topics = topic_previews)
+
+
+@app.route("/update_settings", methods=['POST'])
+def update_settings():
+    if 'username' not in session:
+        return redirect(url_for('home'))
+
+    if request.form['sources']:
+        source = request.form['sources']
+    else: 
+        source = ''
+    if request.form['language']:
+        language = request.form['language']
+    else:
+        language = 'en'
+    
+    username = session['username']
+
+    add_settings(username, language, '', source)
+    return redirect(url_for('home'))
+
 
 @app.route("/track_topic", methods=['POST'])
 def track_topic():

@@ -3,15 +3,15 @@
 <h2> Settings </h2>
 <h2 style = "margin-left: 40px;  font-size: 37px; font-weight: 600;">Search Preferences</h2>
 <div style = "display: flex; flex-direction: column; align-items: left; margin-left: 400px; margin-right: 400px;">
-<form action= "/pick" method="POST">
+<form action= "/update_settings" method="POST">
 <p style= "text-align: left;"> Language: </p>
-<input class = "center"  type="text" name="q" placeholder="Enter a language (ex. English, Spanish)...">
+<input class = "center"  type="text" name="language" placeholder="Enter a language (ex. English, Spanish)...">
 <p style= "text-align: left;"> Nation: </p>
-<input class = "center" type="text" name="q" placeholder="Enter full nation name (ex. United States, China)...">
+<input class = "center" type="text" name="nation" placeholder="Enter full nation name (ex. United States, China)...">
 <p  style= "text-align: left;"> News Sources: </p>
-<input class = "center" type="text" name="q" placeholder="Enter news source (ex. New York Times)...">
+<input class = "center" type="text" name="sources" placeholder="Enter news source (ex. New York Times)...">
 
-<input class = "center" style = "margin-top:70px; margin-bottom: 70px;width:300px; " type="submit" value ="Enter">
+<button type="submit" style="margin-top:70px; margin-bottom: 70px;width:300px; ">Enter</button>
 </form>
 </div>
 {% endblock %}
