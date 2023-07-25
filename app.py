@@ -6,6 +6,7 @@ import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
 import json
 import ast
+import git
 # from flask_login import login_user, logout_user, current_user, login_required
 
 from news import randompopular, search_keyword
@@ -352,7 +353,7 @@ def bookmark():
 @app.route("/update_server", methods=['POST'])
 def webhook():
     if request.method == 'POST':
-        repo = git.Repo('/home/IzMo2000/SproutWealth')
+        repo = git.Repo('/home/RopicTide/TopicTide')
         origin = repo.remotes.origin
         origin.pull()
         return 'Updated PythonAnywhere successfully', 200
