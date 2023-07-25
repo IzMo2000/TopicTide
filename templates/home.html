@@ -16,7 +16,7 @@
   {% endif %}
 {% endwith %}
 
-<h2 style="font-size: 45px;">Welcome, {{username}}!</h2>
+<h2 class = "pagetitle" style="font-size: 45px;">Welcome, {{username}}!</h2>
 <div class="search-container">
   <button type="button"><a href="/settings">Settings</a></button>
   <form action="/results" method="POST">
@@ -27,8 +27,8 @@
 
 <div class="pagecontainer">
   <div style="margin-left: 20px; margin-right: 30px;">
-    <h2 style="text-align: center; margin-left: 5px; font-size: 20px;">Recent Searches:</h2>
-    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%; margin-right: 30px">
+    <h2  class = "pagetitle"  style="text-align: center; margin-left: 5px; font-size: 20px;">Recent Searches:</h2>
+    <div class="card" style="margin-top: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%; margin-right: 30px">
       {% if recent_searches %}
           {% for search in recent_searches[-6:]%}
             <p style = "font-size: 20px; width: 200%;">
@@ -46,8 +46,8 @@
       {% endif %}
     </div>
 
-    <h2 style="text-align: center; margin-left: 5px; font-size: 20px;">Tracked Topics:</h2>
-    <div class="card" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
+    <h2 class = "pagetitle" style="text-align: center; margin-left: 5px; font-size: 20px;">Tracked Topics:</h2>
+    <div class="card" style="margin-top: 5px; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 15%; width: 30%;">
       {% if tracked_topics %}
           {% for topic in tracked_topics%}
             <p style="font-size: 20px; width: 200%;">

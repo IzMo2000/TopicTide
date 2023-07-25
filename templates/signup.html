@@ -8,11 +8,10 @@
     </div>
   {% endif %}
 {% endwith %}
-
-<h2 style="font-size: 45px; margin-bottom: 25px;">Sign Up</h2>
 <div class = "contain" style = " display: flex;flex-direction: column;
 align-items: center;" >
-<div class="card" style="margin-top: 0px; height: 350px;">
+<div class="card" style="height: 500px; padding-top: 20px; margin-top: 40px; ">
+<h2 style="font-size: 45px; margin-bottom: 25px;">Sign Up</h2>
     <form method="POST" action="{{ url_for('signup') }}">
       {{ form.hidden_tag() }}
       <div class="form-group">

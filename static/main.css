@@ -30,8 +30,29 @@
 
   main{
   margin-top: 40px;
-  }
+ 
+ }
 
+
+ body {
+  background-color: #214676;
+  margin: 0;
+  padding: 0;
+}
+
+ .header {
+  background-color: white;
+  margin: 0;
+  height: 180px;
+}
+
+
+
+ 
+    /* background-color: #2d66b1; */
+  
+  
+ 
   .container {
     display: flex;
     flex-direction: column;
@@ -52,11 +73,13 @@
     padding-right: 100px;
     margin-bottom: 75px;
     border: 1.5px solid rgb(184, 183, 183);
-
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
 
+
+  
+  
   }
+ 
   .container .centered-buttons {
     display: flex;
     justify-content: center;
@@ -86,6 +109,7 @@
     color: rgb(0, 0, 0);
     /* font-family: 'Noto Serif JP', serif; */
      font-family: 'Poppins', sans-serif;
+    
     
   }
 
@@ -224,4 +248,7 @@ a{
 
 .smaller-input {
   width: 200px; 
+}
+.pagetitle{
+  color: white;
 }
