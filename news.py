@@ -39,14 +39,16 @@ def search_keyword(keyword, date_published_from=None, date_published_to=None, do
         print(f"An error occurred: {e}")
         return None
 
-# articles = search_keyword('France Riot', '2023-06-28', '2023-07-10', None, 'en')
+''' 
+articles = search_keyword('Biden', '2023-06-28', '2023-07-10', 'cnn.com', 'en')
 
-# if articles:
-#     for article in articles:
-#         print(article['title'])
-#         print(article['description'])
-#         print(article['url'])
-#         print('-' * 50)
+if articles:
+    for article in articles:
+        print(article['title'])
+        print(article['description'])
+        print(article['url'])
+        print('-' * 50)
+'''
         
 # function to popular welcome page with popular articles in english
 def randompopular():
@@ -80,6 +82,5 @@ def randompopular():
     except requests.RequestException as e:
         print(f"An error occurred: {e}")
         return None
-    
     
     
