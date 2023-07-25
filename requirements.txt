@@ -4,5 +4,6 @@ flask_sqlalchemy==3.0.5
 Flask_WTF==1.1.1
 pandas==2.0.2
 Requests==2.31.0
+schedule==1.2.0
 SQLAlchemy==2.0.16
 WTForms==3.0.1

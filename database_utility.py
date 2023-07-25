@@ -2,6 +2,8 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, selec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, Session
 from news import search_keyword
+import schedule
+import time
 
 # from flask_sqlalchemy import SQLAlchemy
 
@@ -364,6 +366,9 @@ def update_tracked_topics():
         session.commit()
 
     with session as session:           
-        
-        
         session.commit()
+
+
+def schedule_topic_updates():
+    # Schedule the update_tracked_topics function to run at midnight every day
+    schedule.every().day.at("00:00").do(update_tracked_topics)
