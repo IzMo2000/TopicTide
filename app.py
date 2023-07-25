@@ -126,7 +126,7 @@ def home():
         return redirect(url_for('start'))
     
     username = session['username']
-
+    user_info = get_user_info(username)
     # retrieve searches
     recent_searches = get_recent_searches(username)
 
@@ -134,7 +134,7 @@ def home():
     tracked_topics = get_tracked_topics(username)
     
     # generate articles for home page
-    populararts = randompopular()
+    populararts = randompopular(valid_countries[user_info.lang])
 
     return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
@@ -205,7 +205,7 @@ def update_settings():
     else: 
         source = None
     if 'language' in request.form:
-        language = request.form['language']
+        language = valid_languages[request.form['language']]
     else:
         language = 'en'
     
@@ -365,5 +365,8 @@ def webhook():
 
 # define main to run app
 if __name__ == '__main__':
+<<<<<<< HEAD
     #schedule_topic_updates()               
+=======
+>>>>>>> master
     app.run(debug=True, host="0.0.0.0", port = 5002)
