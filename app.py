@@ -313,7 +313,7 @@ def remove_tracked():
 
     remove_topic(username, topic)
 
-    flash(f'"<span style = "color: #69FF8C; font-size: 20px;" {topic}" successfully removed.</span>')
+    flash(f'<span style = "color: #69FF8C; font-size: 20px;"> "{topic}" successfully removed.</span>')
 
     return redirect(url_for('tracking'))
 
