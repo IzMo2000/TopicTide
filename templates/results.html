@@ -5,11 +5,11 @@
   {% if messages %}
     {% if messages[0].startswith('Error') %}
     <div style="color: red; text-align: center;">
-      {{ messages[0] }}
+      {{ messages[0] | safe }}
     </div>
     {% else %}
     <div style="font-weight: bold; text-align: center;">
-      {{ messages[0] }}
+      {{ messages[0] | safe }}
     </div>
     {% endif %}
   {% endif %}

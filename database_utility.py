@@ -315,11 +315,11 @@ def get_user_settings(username):
     
     return settings
 
-def remove_bookmark(id):
+def remove_bookmark(username, url):
     session = start_session()
 
     with session as session:
-        session.query(Bookmark).filter_by(id=id).delete()
+        session.query(Bookmark).filter_by(username=username, url=url).delete()
         session.commit()
 
 def remove_topic(username, topic):

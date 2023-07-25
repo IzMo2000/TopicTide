@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, flash, redirect, request, session
+from flask import Flask, render_template, url_for, flash, redirect, request, session, render_template_string
 from flask_behind_proxy import FlaskBehindProxy
 from forms import RegistrationForm, LoginForm, SearchForm
 from database_utility import *
@@ -265,13 +265,15 @@ def track_bookmark():
 
     if not add_bookmark(username, article['url'], article['title'], topic,
                                 article['description'], article['urlToImage']):
-        flash('Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>')
+        flash_str = 'Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a>'
     
     else:
-        flash('Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+        flash_str = ('Article successfully added to bookmarks. You can access your bookmarked articles <a href="/bookmark">here</a>')
+
+    flash(render_template_string(flash_str))
     
     if topic:
-        return redirect(url_for("results"), search_query = topic)
+        return redirect(url_for("results", search_query = topic))
     
     return redirect(url_for("home"))
     
@@ -311,18 +313,18 @@ def remove_tracked():
 
     return redirect(url_for('tracking'))
 
-@app.route("/remove_bookmark", methods=['POST'])
-def remove_bookmark():
+@app.route("/untrack_bookmark", methods=['POST'])
+def untrack_bookmark():
     if 'username' not in session:
         return redirect(url_for('start'))
     
     username = session['username']
 
-    remove_id = request.form['id']
+    url = request.form['url']
 
-    remove_bookmark(id)
+    remove_bookmark(username, url)
 
-    flash(f'Article successfully removed from bookmarks.')
+    flash('Article successfully removed from bookmarks.')
 
     return redirect(url_for('bookmark'))
 

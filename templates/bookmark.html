@@ -1,5 +1,14 @@
 {% extends "layout.html" %}
 {% block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div style="font-weight: bold; text-align: center;">
+        {{ messages[0] }}
+        </div>
+    {% endif %}
+{% endwith %}
+
 <h2>Bookmarks </h2>
 
 {% if bookmarks %}
@@ -18,11 +27,16 @@
               <img style = "border: 2px solid rgb(0, 0, 0);" class="thumbnail" src="{{ bookmark.thumbnail }}" alt="{{ bookmark.title }}">
         {% endif %}
         <p>
-            <a href="{{ bookmark.url }}"
-            {{bookmark.title}}
+            <a href="{{ bookmark.url }}">
+                {{ bookmark.title }}
+            </a>
         </p>
         </div>
-        <button style = "text-align: left;margin: 0px 20px;">Remove</button>
+
+        <form action="/untrack_bookmark" method="POST">
+            <input type="hidden" name="url" value="{{bookmark.url}}">
+            <button style = "text-align: left;margin: 0px 20px;">Remove</button>
+        </form>
     {% endfor %}
 {% else %}
     <p>No Bookmarks Added.</p>
