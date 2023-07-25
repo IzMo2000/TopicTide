@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, flash, redirect, request, session, render_template_string
 from flask_behind_proxy import FlaskBehindProxy
-from forms import RegistrationForm, LoginForm, SearchForm
+from forms import RegistrationForm, LoginForm, SearchForm, valid_languages, valid_countries 
 from database_utility import *
 import pandas as pd
 from flask_sqlalchemy import SQLAlchemy
@@ -37,21 +37,11 @@ def db():
 
 @app.route("/settings", methods=['GET', 'POST'])
 def settings():
+    lang = valid_languages
+    nations = valid_countries 
+    return render_template('settings.html', subtitle='Starting Screen', lang = lang, nations = nations) 
 
-    username = session['username']
-    user_info = get_user_info(username)
-
-    language = user_info.lang
-    nation = user_info.nation
-    sources = user_info.source
-
-    if request.method == 'POST':
-        language = request.form['language']
-        print("LANG: ", language)
-        sources = request.form['sources']
-        print("SOURCE: ", sources)
-    
-    return render_template('settings.html', subtitle='Starting Screen') 
+   
 
 
 # define user login page
