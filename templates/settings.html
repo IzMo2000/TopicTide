@@ -1,9 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2> Language </h2>
+<h2 class = "pagetitle"> Language </h2>
 
 <form action="/update_settings" method="POST" style="text-align: center;">
-        <p> Options: </p>
+        <p class = "pagetitle"> Options: </p>
         <select name="language">
             <option disabled selected>Select a language...</option>
             {% for i in lang %}

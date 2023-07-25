@@ -9,11 +9,12 @@
     {% endif %}
 {% endwith %}
 
-<h2>Bookmarks </h2>
+<h2 class = "pagetitle">Bookmarks </h2>
 
 {% if bookmarks %}
-<h2 style = "font-size: 35px; text-align: left; margin: 20px 20px;">Topic</h2>
-    {% for bookmark in bookmarks %}
+<div class = "card" style = " width: 75% ; height: auto;"> 
+    <h2 style = "font-size: 35px; text-align: left; margin: 20px 20px;">Topic</h2>
+{% for bookmark in bookmarks %}
     <div class = "align-items: center;">
     <div class = "bookmark" style = "display: flex;
         justify-content: left; ">
@@ -49,9 +50,10 @@
         </form>
 
     {% endfor %}
+</div>   
 
 {% else %}
-    <p>No Bookmarks Added.</p>
+    <p class = "pagetitle">No Bookmarks Added.</p>
 {% endif %}
 
 {% endblock %}
