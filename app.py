@@ -200,10 +200,6 @@ def update_settings():
     if 'username' not in session:
         return redirect(url_for('home'))
 
-    if 'sources' in request.form:
-        source = request.form['sources']
-    else: 
-        source = None
     if 'language' in request.form:
         language = valid_languages[request.form['language']]
     else:
@@ -211,7 +207,7 @@ def update_settings():
     
     username = session['username']
 
-    add_settings(username, language, '', source)
+    add_settings(username, language, '', '')
     return redirect(url_for('home'))
 
 
@@ -365,8 +361,8 @@ def webhook():
 
 # define main to run app
 if __name__ == '__main__':
-<<<<<<< HEAD
+#<<<<<<< HEAD
     #schedule_topic_updates()               
-=======
->>>>>>> master
+#=======
+#>>>>>>> master
     app.run(debug=True, host="0.0.0.0", port = 5002)

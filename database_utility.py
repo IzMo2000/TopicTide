@@ -2,11 +2,11 @@ from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, selec
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker, Session
 from news import search_keyword
-<<<<<<< HEAD
+#<<<<<<< HEAD
 #import schedule
-=======
->>>>>>> master
-import time
+#=======
+#>>>>>>> master
+#import time
 
 # from flask_sqlalchemy import SQLAlchemy
 
