@@ -36,7 +36,7 @@ class TrackedArticle(Base):
     __tablename__ = 'tracked_articles'
     id = Column(Integer, primary_key=True)
     username = Column(String, ForeignKey('users.username'), nullable=False)
-    topic = Column(String, ForeignKey('tracked_topics.topic'),nullable=False)
+    topic = Column(String, ForeignKey('tracked_topics.topic'))
     url = Column(String, nullable=False)
     title = Column(String, nullable=False)
     description = Column(String)
@@ -329,14 +329,10 @@ def remove_topic(username, topic):
     session = start_session()
 
     with session as session:
+        session.query(TrackedArticle).filter_by(username=username, topic=topic).delete()
         removed_topic = session.query(TrackedTopic).filter_by(topic=topic, username=username).first()
-
-        if removed_topic: 
-            session.query(TrackedArticle).filter_by(topic=topic, username=username).delete()
-
-            session.delete(removed_topic)
-
-            session.commit()
+        session.delete(removed_topic)
+        session.commit()
 
 
 # starts session, enabling database interaction
