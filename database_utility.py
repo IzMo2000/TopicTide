@@ -239,37 +239,51 @@ def get_topic_articles(username, topic, preview = False):
 # Retrieves a user's 5 most recent searches
 def get_recent_searches(username):
     session = start_session()
+
+    searches = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
-        searches = user.searches[::-1]
+        if user:
+            searches = user.searches[::-1]
     return searches
 
 def get_tracked_articles(username):
     session = start_session()
 
+    tracked_articles = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
 
-        tracked_articles = user.tracked_articles
+        if user:
+            tracked_articles = user.tracked_articles
     
     return tracked_articles
 
 def get_tracked_topics(username):
     session = start_session()
 
+    tracked_topics = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
-        tracked_topics = user.tracked_topics
+
+        if user:
+            tracked_topics = user.tracked_topics
     
     return tracked_topics
 
 def get_bookmarks(username):
     session = start_session()
 
+    bookmarks = None
+
     with session as session:
         user = session.query(User).filter_by(username=username).first()
 
-        bookmarks = user.bookmarks
+        if user:
+            bookmarks = user.bookmarks
     
     return bookmarks
 
