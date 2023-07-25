@@ -49,14 +49,14 @@ def search_keyword(keyword, date_published_from=None, date_published_to=None, do
 #         print('-' * 50)
         
 # function to popular welcome page with popular articles in english
-def randompopular():
+def randompopular(country):
     api_key = 'badd03ebb337478ba323ff67145d9475'
     url = 'https://newsapi.org/v2/top-headlines'
 
     
     params = {
             'apiKey': api_key,
-            'country': 'US',
+            'country': country,
             'pageSize': 9}
      
     try:
