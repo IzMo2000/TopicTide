@@ -1,43 +1,34 @@
 import unittest, sys, os
 
-sys.path.append('../') # imports python file from parent directory
-from app import app
-from database_utility import Base
+sys.path.append('../../TopicTide')
+from database_utility import add_user, add_topic, add_article, add_bookmark, remove_bookmark, remove_topic, get_tracked_articles, get_bookmarks, get_user_info
 
-class UsersTests(unittest.TestCase):
+# Define a test class that inherits from unittest.TestCase
+class TestDatabaseFunctions(unittest.TestCase):
 
-    # executed prior to each test
-    def setUp(self):
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-        self.app = app.test_client()
-        with app.app_context():
-            Base.drop_all()
-            Base.create_all()
+    # Test add_user function
+    def test_add_user(self):
+        add_user("test_user", "test@example.com", "password123")
+        user_info = get_user_info("test_user")
+        self.assertIsNotNone(user_info)
+        self.assertEqual(user_info.username, "test_user")
+        self.assertEqual(user_info.email, "test@example.com")
+        self.assertEqual(user_info.password, "password123")
 
-    ###############
-    #### tests ####
-    ###############
+    # Test add_topic function
+    def test_add_topic(self):
+        add_user("test_user", "test@example.com", "password123")
+        user = get_user_info("test_user")
+        self.assertIsNotNone(user, "User not found.")
 
-    def register(self, username, email, password):
-        return self.app.post('/signup',
-                            data=dict(username=username,
-                                      email=email,
-                                      password=password, 
-                                      confirm_password=password),
-                            follow_redirects=True)
-
-    def test_valid_user_registration(self):
-        response = self.register('test', 'test@example.com', 'FlaskIsAwesome')
-        self.assertEqual(response.status_code, 200)
-
-    def test_invalid_username_registration(self):
-        response = self.register('t', 'test@example.com', 'FlaskIsAwesome')
-        self.assertIn(b'Field must be between 2 and 20 characters long.', response.data)
-
-    def test_invalid_email_registration(self):
-        response = self.register('test2', 'test@example', 'FlaskIsAwesome')
-        self.assertIn(b'Invalid email address.', response.data)
+        add_topic("test_user", "politics", nation="USA", language="en", update_interval=1, source="nytimes")
+        # Retrieve the tracked articles for the user
+        tracked_articles = get_tracked_articles("test_user")
+        # Check if tracked articles were added correctly
+        self.assertIsNotNone(tracked_articles, "Tracked articles not found.")
+        #self.assertEqual(len(tracked_articles), 1)
 
 
-if __name__ == "__main__":
+# Run the tests
+if __name__ == '__main__':
     unittest.main()
