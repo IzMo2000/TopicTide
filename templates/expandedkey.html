@@ -1,7 +1,21 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<button type = "button"> <a href = "/tracking"> Back </a> </button>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% if messages[0].startswith('Error') %}
+    <div style="color: red; text-align: center;">
+      {{ messages[0] | safe }}
+    </div>
+    {% else %}
+    <div style="font-weight: bold; text-align: center;">
+      {{ messages[0] | safe }}
+    </div>
+    {% endif %}
+  {% endif %}
+{% endwith %}
+
+<button type = "button"> <a href = "/tracking"> See All Tracked Topics </a> </button>
 
 <h2>Showing Tracked Articles For: "{{topic_name}}"</h2>
 <div class="titlecontainer">
@@ -24,6 +38,17 @@
         <p style="font-size: 18px;">
             {{article.description}}
         </p>
+
+        <form method="POST" action="{{ url_for('track_bookmark') }}">
+          <input type="hidden" name="topic" value="{{ topic_name }}">
+          <input type="hidden" name="url" value="{{ article.url }}">
+          <input type="hidden" name="title" value="{{ article.title }}">
+          <input type="hidden" name="description" value="{{ article.description }}">
+          <input type="hidden" name="thumbnail" value="{{ article.thumbnail }}">
+          <input type="hidden" name="article" value="">
+          <input type="hidden" name="redirect" value="topic_expand">
+          <button type="submit" style="background-color: white;">Bookmark</button>
+      </form>
     </div>
     {% endfor %}
 {% endif %}
