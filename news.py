@@ -1,7 +1,7 @@
 import requests
 
 def search_keyword(keyword, date_published_from=None, date_published_to=None, domain=None, language=None):
-    api_key = 'ebbd63f1bafa4347b339797845694480'
+    api_key = 'd5f5cf4c073547449da951c980a50108'
     url = 'https://newsapi.org/v2/everything'
 
     params = {
