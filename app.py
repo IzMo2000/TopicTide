@@ -349,8 +349,6 @@ def topic_expand():
 
     hour = session['hour']
 
-    print(topic)
-
     if current_datetime.hour != hour:
         update_topic(username, topic)
         session['hour'] = current_datetime.hour
