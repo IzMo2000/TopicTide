@@ -238,18 +238,13 @@ def clear_recent_searches(username):
 def get_topic_articles(username, topic, preview = False):
     session = start_session()
 
-    print(username)
-
     with session as session:
-        topic = session.query(TrackedTopic).filter_by(username=username, topic=topic).first()
+        tracked_articles = session.query(TrackedArticle).filter_by(username=username, topic=topic).all()
 
         if preview:
-            tracked_articles = topic.tracked_articles[:3]
+            return tracked_articles[:3]
         
-        else:
-            tracked_articles = topic.tracked_articles
-    
-    return tracked_articles
+    return tracked_articles 
 
 # Retrieves a user's 5 most recent searches
 def get_recent_searches(username):
