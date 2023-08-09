@@ -1,7 +1,7 @@
-import unittest, sys
+import unittest, sys, os
 
-sys.path.append('../') # imports python file from parent directory
-from app import app #imports flask app object
+sys.path.append('../TopicTide') # imports python file from parent directory
+from app import app
 
 class BasicTests(unittest.TestCase):
 
