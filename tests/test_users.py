@@ -1,7 +1,9 @@
 import unittest, sys, os
 
-sys.path.append('../../TopicTide')
-from database_utility import add_user, add_topic, add_article, add_bookmark, remove_bookmark, remove_topic, get_tracked_articles, get_bookmarks, get_user_info
+sys.path.append('../TopicTide') # imports python file from parent directory
+from database_utility import add_user, add_topic, add_article
+from database_utility import add_bookmark, remove_bookmark, remove_topic
+from database_utility import get_tracked_articles, get_bookmarks, get_user_info
 
 # Define a test class that inherits from unittest.TestCase
 class TestDatabaseFunctions(unittest.TestCase):
