@@ -9,12 +9,11 @@ import ast
 import git
 import datetime
 from news import randompopular, search_keyword
-#>>>>>>> 9e60eabf43724e7f5234824520fc9084fb34945b
 
+# init app
 app = Flask(__name__)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = '16bd5547b4e8139970845e9f58c7e470'
-
 app.static_url_path = '/static'
 app.static_folder = 'static'
 
@@ -29,12 +28,14 @@ def start():
 
     return render_template('start.html', subtitle='Starting Screen') 
 
+# define route for database
 @app.route("/db")
 def db():
     with engine.connection() as connection:
         query_result = connection.execute(db.select(database_utility.User))
         print(query_result.fetchall())
 
+# define a setting page that allows users to switch the language they want to get articles in
 @app.route("/settings", methods=['GET', 'POST'])
 def settings():
     lang = valid_languages
@@ -75,6 +76,7 @@ def login():
 
     return render_template('login.html', subtitle='Login', form=form)
 
+#
 @app.route("/logout", methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST' and 'logoutt' in request.form:
@@ -141,14 +143,17 @@ def home():
     return render_template("home.html", populararts = populararts, username = username, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
 
+# define results page, which shows corresponding articles for the searched result
 @app.route("/results", methods=['GET', 'POST'])
 def results():
     search = ""
 
+    # add the search to the user's history
     if request.method == 'POST':
         search = request.form['userInput']
         add_search(session['username'],search)
 
+    # get articles corresponding to search query
     elif request.method == 'GET':
         search = request.args.get('search_query')
 
@@ -165,28 +170,29 @@ def results():
     return render_template("results.html", articles = articles, input = search, recent_searches = recent_searches, tracked_topics = tracked_topics)
 
 
-# define tracking page
+# define tracking page, which displays all of the currently tracked topics along with sample articles
 @app.route("/tracking", methods=['GET', 'POST'])
 def tracking():
+    # validate username
     if 'username' not in session:
-        
         return redirect(url_for('start'))
 
+    # get curr date/time
     current_datetime = datetime.datetime.now()
-    
+
+    # obtain session variables
     if 'hour' not in session:
         session['hour'] = current_datetime.hour
-    
     username = session['username']
-
     hour = session['hour']
 
+    # check for topic to be updated
     if current_datetime.hour != hour:
         update_tracked_topics(username)
         session['hour'] = current_datetime.hour
 
+    # get previews for the sample articles
     topic_previews = []
-
     tracked_topics = get_tracked_topics(username)
 
     for topic in tracked_topics:
@@ -194,7 +200,7 @@ def tracking():
         sub_list.append(topic.topic)
         sub_list += get_topic_articles(username, topic.topic, True)
         topic_previews.append(sub_list)
-
+    
     return render_template("tracking.html", topics = topic_previews)
 
 
@@ -213,7 +219,7 @@ def update_settings():
     add_settings(username, language, '', '')
     return redirect(url_for('home'))
 
-
+# route that handles tracking a topic
 @app.route("/track_topic", methods=['POST'])
 def track_topic():
     # check for valid post request
@@ -242,17 +248,21 @@ def track_topic():
 
     return redirect(url_for('home'))
 
+# route for handling bookmarks
 @app.route("/track_bookmark", methods=['POST'])
 def track_bookmark():
+    # validate username
     if 'username' not in session:
         return redirect(url_for('start'))
 
+    # obtain session info
     username = session['username']
-
     topic = request.form['topic']
 
+    # get page to go back to if desired
     redirect_route = request.form['redirect']
 
+    # handle case where article object must be parsed
     if request.form['article']:
         article = request.form['article']
         article = ast.literal_eval(article)
@@ -260,13 +270,14 @@ def track_bookmark():
         title = article['title']
         description = article['description']
         thumbnail = article['urlToImage']
-    
+    # handle case where raw article data is sent
     else:
         url = request.form['url']
         title = request.form['title']
         description = request.form['description']
         thumbnail = request.form['thumbnail']
 
+    # attempt to add bookmark, indicate success/failure
     if not add_bookmark(username, url, title, topic,
                                 description, thumbnail):
         flash_str = ('<span style="color:rgb(254, 157, 157);font-size: 20px;"> Error: Article already in bookmarks or bookmark limit reached (max 10). You can access your bookmarked articles <a href="/bookmark" >here</a></span>')
@@ -286,15 +297,15 @@ def track_bookmark():
 # define clear searches route
 @app.route("/clear_searches", methods=['POST'])
 def clear_searches():
+    # validate user
     if 'username' not in session:
         return redirect(url_for('start'))
 
     username = session['username']
-
     clear_recent_searches(username)
-
     flash('<span style="color: #69FF8C; font-size: 20px;"> Recent Searches successfully cleared</span>')
 
+    # redirect to search or home, depending on where the searches were deleted
     if request.form['topic']:
         return redirect(url_for('results', search_query = request.form['topic']))
 
@@ -304,11 +315,8 @@ def clear_searches():
 @app.route("/remove_tracked", methods=['POST'])
 def remove_tracked():
     if 'username' not in session:
-
         return redirect(url_for('start'))
-    
     username = session['username']
-
     topic = request.form['topic']
 
     remove_topic(username, topic)
